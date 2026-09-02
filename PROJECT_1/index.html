@@ -31,9 +31,14 @@
             flex: 1;
             min-width: 280px;
         }
-        figure img,
+        figure img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
         figure video {
             width: 100%;
+            max-width: 450px;
             height: auto;
             border-radius: 4px;
         }
@@ -74,7 +79,7 @@
     <h2>Part 3: The Dolly Zoom</h2>
     <div class="row">
         <figure>
-            <video src="IMG_7548.MOV"></video>
+            <video src="IMG_7548.MOV" autoplay muted loop playsinline></video>
         </figure>
     </div>
 </body>
