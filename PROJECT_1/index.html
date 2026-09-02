@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Project 1</title>
+    <title>Project 0: Becoming Friends with Your Camera</title>
     <style>
         body {
             font-family: -apple-system, Helvetica, Arial, sans-serif;
@@ -12,6 +12,10 @@
             color: #222;
         }
         h1 {
+            font-size: 30px;
+            margin-bottom: 0;
+        }
+        h2 {
             font-size: 22px;
             margin-top: 48px;
             padding-bottom: 8px;
@@ -22,28 +26,50 @@
             gap: 20px;
             flex-wrap: wrap;
         }
-        .row img {
+        figure {
+            margin: 0;
             flex: 1;
             min-width: 280px;
+        }
+        figure img {
             width: 100%;
             height: auto;
             border-radius: 4px;
         }
+        figcaption {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+        }
     </style>
 </head>
 <body>
-    <h1>Part 1: Selfie: The Wrong Way vs. The Right Way</h1>
+    <h1>Project 0: Becoming Friends with Your Camera</h1>
+
+    <h2>Part 1: Selfie: The Wrong Way vs. The Right Way</h2>
     <div class="row">
-        <img src="IMG_7540.jpg" alt="Selfie taken up close">
-        <img src="IMG_7541.jpg" alt="Selfie taken from far away, zoomed in">
+        <figure>
+            <img src="IMG_7540.jpg" alt="Selfie taken at 1x zoom">
+            <figcaption>1x zoom</figcaption>
+        </figure>
+        <figure>
+            <img src="IMG_7541.jpg" alt="Selfie taken at 4x zoom">
+            <figcaption>4x zoom</figcaption>
+        </figure>
     </div>
 
-    <h1>Part 2: Architectural Perspective Compression</h1>
+    <h2>Part 2: Architectural Perspective Compression</h2>
     <div class="row">
-        <img src="IMG_7539.jpg" alt="Building shot up close">
-        <img src="IMG_7536.jpg" alt="Building shot from far away, zoomed in">
+        <figure>
+            <img src="IMG_7539.jpg" alt="Building shot at 1x zoom">
+            <figcaption>1x zoom</figcaption>
+        </figure>
+        <figure>
+            <img src="IMG_7536.jpg" alt="Building shot at 4x zoom">
+            <figcaption>4x zoom</figcaption>
+        </figure>
     </div>
 
-    <h1>Part 3: The Dolly Zoom</h1>
+    <h2>Part 3: The Dolly Zoom</h2>
 </body>
 </html>
