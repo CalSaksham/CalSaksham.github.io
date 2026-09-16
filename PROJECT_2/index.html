@@ -72,21 +72,19 @@
     <p>CS180 &middot; Saksham</p>
 
     <h2>Overview</h2>
-    <!-- Your commentary: what the problem is, why the three chunks need aligning. -->
-    The goal of this project was to fundamentally understand and emulate how photography was traditionally stitched together to form colored images some time ago. Using most of numpy and sckit/sckit.io I was able to convert three discrete still exposure taken back to back into thre color channels and align them together to form the target colored image. The reason there was a need for allignment is because there might be subtle perturbations between these image shots such as brightness change or slight movements which might need to be alligned precisely for th epurpose of overlapping the color channels. For which I used a brute force search on the discplament vector for smaller sized images, and ran a recursive search of increasingly downscaled pixels for bigger images.
+
+    The goal of this project was to fundamentally understand and emulate how photography was traditionally stitched together to form colored images some time ago. Using most of numpy and scikit/sckit.io I was able to convert three discrete still exposure taken back to back into three color channels and align them together to form the target colored image. The reason why there was a need for allignment is because there might be subtle perturbations between these image shots such as brightness change or slight movements which might need to be alligned precisely for the purpose of overlapping the color channels. For which I used a brute force search on the displacement vector for smaller sized images, and ran a recursive search of increasingly downscaled pixels for bigger images.
     <p></p>
 
     <h2>Approach</h2>
-    <!-- Your commentary: exhaustive search over [-15, 15], np.roll, the metric you used. -->
+
     For JPEGs brute force across a 30 width search on both the displacement length and height, using np.roll mechanic to simulate that and trying both the L2 Norm and the NCC as loss functions. A lot of interesting observations.
     
     <p></p>
 
     <h2>First pass</h2>
-    <!-- Your commentary: scoring on interior pixels only.
-         Concrete numbers you can cite: cathedral went from (1, -1) and (8, -1)
-         scoring the full frame, to (5, 2) and (11, 3) scoring the interior. -->
-    My first real cathedral result was (1, -1) and (8, -1). Now it's (5, 2) and (11, 3). I ran print statements across the loss function output and realized the problem was the plate borders. The black frame and bright scanning margins are high contrast, and they sit in the same place in all three chunks no matter how the actual photo is offset. L2 tried to match them and got pulled toward zero. Once I stopped scoring on the borders, cathedral snapped to (5, 2) and (11, 3).
+
+    My first real cathedral result was (-1, 1) and (-1, 8). Now it's (2, 5) and (3, 11). I ran print statements across the loss function output and realized the problem was the plate borders. The black frame and bright scanning margins are high contrast, and they sit in the same place in all three chunks no matter how the actual photo is offset. L2 tried to match them and got pulled toward zero. Once I stopped scoring on the borders, cathedral snapped to (5, 2) and (11, 3).
     <p></p>
 
 
@@ -246,6 +244,16 @@
 
     <p></p>
 
+    <div class="row">
+        <figure>
+            <img src="out_fname.jpg" alt="Before automatic cropping">
+            <figcaption>Before</figcaption>
+        </figure>
+        <figure>
+            <img src="icon.tif_out.jpg" alt="After automatic cropping">
+            <figcaption>After</figcaption>
+        </figure>
+    </div>
 
 </body>
 </html>
