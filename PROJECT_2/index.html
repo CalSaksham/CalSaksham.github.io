@@ -78,7 +78,7 @@
 
     <h2>Approach</h2>
 
-    For JPEGs brute force across a 30 width search on both the displacement length and height, using np.roll mechanic to simulate that and trying both the L2 Norm and the NCC as loss functions. A lot of interesting observations.
+    For JPEGs brute force across a 30 width search on both the displacement length and height, using np.roll mechanic to simulate that and trying both the L2 Norm and the NCC as loss functions. A lot of interesting observations.L2 is the sum of squared differences between the two channels, so smaller is better. NCC subtracts each channel's mean, divides by its norm, and takes the dot product, so it's between -1 and 1 and bigger is better. To make my code hybrid, I take the negative value for L2 and maximize it. The difference is that NCC doesn't care if one channel is overall brighter than the other, it only cares whether the pattern matches. That matters here because the three channels were shot through different filters and don't have the same brightness. I ended up using NCC on the middle 60% of the image for everything.
     
     <p></p>
 
@@ -117,6 +117,8 @@
 
     <h2>Multi-scale pyramid alignment</h2>
     <p></p>
+
+    The tif files are about ten times bigger than the jpgs in each direction, so the same physical misalignment is now around 100 pixels instead of 10. A plus-minus 15 search can't reach that, and a plus-minus 150 search over a 3000 by 3000 image is far too slow. So instead I shrink the image by half repeatedly, with anti-aliasing so we have consistent sampling, until it's a few hundred pixels across. At that size a 100 pixel offset is only a few pixels, so a 3- search finds it cheaply. Then I go back up one level at a time, double the estimate, and search a small 10-wide window around it to correct for the precision I lost when the image was small. Only the chunkiest level does a wide search, and only the fine levels are expensive, so it comes out fast.
 
     <h3>Computed offsets</h3>
     <table>
