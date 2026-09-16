@@ -73,33 +73,33 @@
 
     <h2>Overview</h2>
     <!-- Your commentary: what the problem is, why the three chunks need aligning. -->
+    The goal of this project was to fundamentally understand and emulate how photography was traditionally stitched together to form colored images some time ago. Using most of numpy and sckit/sckit.io I was able to convert three discrete still exposure taken back to back into thre color channels and align them together to form the target colored image. The reason there was a need for allignment is because there might be subtle perturbations between these image shots such as brightness change or slight movements which might need to be alligned precisely for th epurpose of overlapping the color channels. For which I used a brute force search on the discplament vector for smaller sized images, and ran a recursive search of increasingly downscaled pixels for bigger images.
     <p></p>
 
     <h2>Approach</h2>
     <!-- Your commentary: exhaustive search over [-15, 15], np.roll, the metric you used. -->
+    For JPEGs brute force across a 30 width search on both the displacement length and height, using np.roll mechanic to simulate that and trying both the L2 Norm and the NCC as loss functions. A lot of interesting observations.
+    
     <p></p>
 
-    <h3>Ignoring the borders</h3>
+    <h2>First pass</h2>
     <!-- Your commentary: scoring on interior pixels only.
          Concrete numbers you can cite: cathedral went from (1, -1) and (8, -1)
          scoring the full frame, to (5, 2) and (11, 3) scoring the interior. -->
+    My first real cathedral result was (1, -1) and (8, -1). Now it's (5, 2) and (11, 3). I ran print statements across the loss function output and realized the problem was the plate borders. The black frame and bright scanning margins are high contrast, and they sit in the same place in all three chunks no matter how the actual photo is offset. L2 tried to match them and got pulled toward zero. Once I stopped scoring on the borders, cathedral snapped to (5, 2) and (11, 3).
     <p></p>
 
-    <h3>The metric</h3>
-    <!-- Your commentary: L2 and NCC, what each measures, where they disagreed.
-         Concrete case: on cathedral's red channel NCC scored the wrong shift at
-         0.7524 against 0.7453 for the correct one. -->
+
+    <h2>Interesting observation</h2>
+    np.roll wraps around the last few pixels back to the start. If you shift a channel down 10 rows, the bottom 10 rows reappear at the top. That is actually real photo content, but from the wrong place, so my variance-based border detection walked straight past it. You can see it in some of the outputs as a colored strip on one edge. I ended up cropping after alignment as well as before, but it's the thing I'd most want to handle properly with more time.
     <p></p>
 
-    <h2>Single-scale alignment</h2>
-    <!-- Your commentary on the low-resolution results. -->
-    <p></p>
 
     <table>
-        <tr><th>Image</th><th>G &rarr; B</th><th>R &rarr; B</th></tr>
-        <tr><td>cathedral.jpg</td><td></td><td></td></tr>
-        <tr><td>monastery.jpg</td><td></td><td></td></tr>
-        <tr><td>tobolsk.jpg</td><td></td><td></td></tr>
+        <tr><th>Image</th><th>G &rarr; B (x, y)</th><th>R &rarr; B (x, y)</th></tr>
+        <tr><td>cathedral.jpg</td><td>(2, 5)</td><td>(3, 12)</td></tr>
+        <tr><td>monastery.jpg</td><td>(2, -3)</td><td>(2, 3)</td></tr>
+        <tr><td>tobolsk.jpg</td><td>(3, 3)</td><td>(3, 7)</td></tr>
     </table>
 
     <div class="row">
@@ -118,23 +118,22 @@
     </div>
 
     <h2>Multi-scale pyramid alignment</h2>
-    <!-- Your commentary: why exhaustive search breaks on the .tif files, how the
-         pyramid works, and the anti-aliasing point about blurring before subsampling. -->
     <p></p>
 
     <h3>Computed offsets</h3>
     <table>
-        <tr><th>Image</th><th>G &rarr; B</th><th>R &rarr; B</th></tr>
-        <tr><td>church.tif</td><td></td><td></td></tr>
-        <tr><td>emir.tif</td><td></td><td></td></tr>
-        <tr><td>harvesters.tif</td><td></td><td></td></tr>
-        <tr><td>icon.tif</td><td></td><td></td></tr>
-        <tr><td>ilemselga.tif</td><td></td><td></td></tr>
-        <tr><td>melons.tif</td><td></td><td></td></tr>
-        <tr><td>religous_painting.tif</td><td></td><td></td></tr>
-        <tr><td>self_portrait.tif</td><td></td><td></td></tr>
-        <tr><td>siren.tif</td><td></td><td></td></tr>
-        <tr><td>three_generations.tif</td><td></td><td></td></tr>
+        <tr><th>Image</th><th>G &rarr; B (x, y)</th><th>R &rarr; B (x, y)</th></tr>
+        <tr><td>church.tif</td><td>(4, 25)</td><td>(-4, 58)</td></tr>
+        <tr><td>emir.tif</td><td>(24, 49)</td><td>(43, 58)</td></tr>
+        <tr><td>harvesters.tif</td><td>(17, 59)</td><td>(14, 123)</td></tr>
+        <tr><td>icon.tif</td><td>(17, 40)</td><td>(23, 89)</td></tr>
+        <tr><td>ilemselga.tif</td><td>(7, 40)</td><td>(11, 131)</td></tr>
+        <tr><td>melons.tif</td><td>(11, 82)</td><td>(14, 178)</td></tr>
+        <tr><td>religous_painting.tif</td><td>(2, 29)</td><td>(6, 69)</td></tr>
+        <tr><td>self_portrait.tif</td><td>(29, 78)</td><td>(37, 176)</td></tr>
+        <tr><td>siren.tif</td><td>(-5, 49)</td><td>(-24, 96)</td></tr>
+        <tr><td>three_generations.tif</td><td>(14, 52)</td><td>(12, 111)</td></tr>
+        <tr><td>wharf.tif</td><td>(-6, 15)</td><td>(-15, 82)</td></tr>
     </table>
 
     <div class="row">
@@ -187,91 +186,66 @@
             <img src="three_generations.tif_out.jpg" alt="Three generations, aligned">
             <figcaption>three_generations</figcaption>
         </figure>
-        <figure></figure>
+        <figure>
+            <img src="wharf.tif_out.jpg" alt="Wharf, aligned">
+            <figcaption>wharf</figcaption>
+        </figure>
         <figure></figure>
     </div>
 
+    <h2>Pyramid trouble</h2>
+
+    I got the recursion backwards twice. First I was calling rescale with a factor of 2 instead of 0.5, so the images got bigger going down. Then I was doubling the center on the way down instead of on the way up. The way it should work: shrink until the image is small, search wide there, and then on the way back up double the child's estimate and refine it with a small window around that. The base case should be about image size, not window size.
+
+    <p></p>
+
+    <h2> NCC bug</h2>
+
+    My NCC scored cathedral's red channel at (8, 3) with 0.7524 and the correct (11, 3) with 0.7453. I printed every score in the window and the surface was a smooth dome, not a sharp peak. That means the metric was correlating the low-frequency stuff, the sky gradient and vignetting, instead of the cathedral's edges. Restricting the comparison to the middle 60% of the image, where the vignetting isn't, fixed it.
+    <p></p>
+
+    <h2> Speedup</h2>
+
+    My first run on a tif took 86 seconds. Two Python loops inside the search, one rolling row by row and one summing per-row norms, were running thousands of times per candidate shift. Replacing them with a single np.roll on both axes and a single np.sum brought it down to a few seconds. The spec says aim for under a minute per image and it wasn't kidding.
+    <p></p>
+
     <h2>My own selections</h2>
-    <!-- Your commentary: where you found these and why you picked them.
-         Each one is shown next to the Library of Congress reference version. -->
     <p></p>
 
     <table>
-        <tr><th>Image</th><th>G &rarr; B</th><th>R &rarr; B</th></tr>
-        <tr><td>wharf.tif</td><td></td><td></td></tr>
-        <tr><td>Master PNP Prok 01800 01860a.tif</td><td></td><td></td></tr>
-        <tr><td>Master PNP Prok 01800 01864a.tif</td><td></td><td></td></tr>
+        <tr><th>Image</th><th>G &rarr; B (x, y)</th><th>R &rarr; B (x, y)</th></tr>
+        <tr><td>Master PNP Prok 01700 01754a.tif</td><td>(-9, 34)</td><td>(21, 92)</td></tr>
+        <tr><td>Master PNP Prok 01800 01860a.tif</td><td>(34, 75)</td><td>(52, 156)</td></tr>
+        <tr><td>Master PNP Prok 01800 01864a.tif</td><td>(24, 54)</td><td>(33, 117)</td></tr>
     </table>
 
-    <h3>Wharf</h3>
-    <!-- Your commentary on this one. -->
-    <p></p>
     <div class="row">
         <figure>
-            <img src="wharf.tif_out.jpg" alt="Wharf, my alignment">
-            <figcaption>My output</figcaption>
+            <img src="Master PNP Prok 01700 01754a.tif_out.jpg" alt="Camel caravan, aligned">
+            <figcaption>Camel caravan in the snow</figcaption>
         </figure>
         <figure>
-            <img src="REFERENCE_wharf.jpg" alt="Wharf, Library of Congress reference">
-            <figcaption>Library of Congress reference</figcaption>
-        </figure>
-    </div>
-
-    <h3>Sheep in a field</h3>
-    <!-- Your commentary on this one. -->
-    <p></p>
-    <div class="row">
-        <figure>
-            <img src="Master PNP Prok 01800 01860a.tif_out.jpg" alt="Sheep, my alignment">
-            <figcaption>My output</figcaption>
+            <img src="Master PNP Prok 01800 01860a.tif_out.jpg" alt="Sheep in a field, aligned">
+            <figcaption>Sheep in a field</figcaption>
         </figure>
         <figure>
-            <img src="REFERENCE_02152u.jpg" alt="Sheep, Library of Congress reference">
-            <figcaption>Library of Congress reference</figcaption>
-        </figure>
-    </div>
-
-    <h3>Blossoming tree</h3>
-    <!-- Your commentary on this one. -->
-    <p></p>
-    <div class="row">
-        <figure>
-            <img src="Master PNP Prok 01800 01864a.tif_out.jpg" alt="Blossoming tree, my alignment">
-            <figcaption>My output</figcaption>
-        </figure>
-        <figure>
-            <img src="REFERENCE_02155u.jpg" alt="Blossoming tree, Library of Congress reference">
-            <figcaption>Library of Congress reference</figcaption>
+            <img src="Master PNP Prok 01800 01864a.tif_out.jpg" alt="Blossoming tree, aligned">
+            <figcaption>Blossoming tree</figcaption>
         </figure>
     </div>
 
     <h2>Where it failed</h2>
-    <!-- Your commentary. Emir: the robe is saturated blue, so it reads bright through
-         the blue filter and nearly black through the red one, and a metric comparing
-         raw intensities has nothing to lock onto there.
-         Church, if still off: mostly smooth water and sky, so the score surface is
-         nearly flat and the correct shift barely stands out. -->
+    The Emir's robe is deep blue, so it comes out bright through the blue filter and almost black through the red one. My metric compares brightness, and for the robe the brightness just doesn't match at any shift. So the search lines up the plain wall behind him instead and the robe ends up off. Matching on edges instead of raw brightness would fix this, since the outline of the robe is in the same place in all three channels no matter how bright it is.
     <p></p>
 
     <h2>Bells and whistles</h2>
 
-    <h3>Automatic cropping</h3>
-    <!-- Your commentary: per-row and per-column variance, threshold relative to the
-         image's own mean variance, scan inward from each edge and stop at the first
-         line above threshold. Innermost box across all three channels so they crop
-         identically and the displacements stay comparable. -->
+    <h3>Variance based automatic cropping</h3>
+
+    My approach to removing the borders was that I used the fact that these borders are low contrast horizontally/vertically. So I computed the variance of every row and column, set a threshold relative to the image's own mean variance, and scanned inward from each edge until I hit a line above threshold. My first version deleted every low-variance row anywhere in the image, which would have shredded the sky. Borders have to be contiguous with the edge, so the scan has to stop.
+
     <p></p>
 
-    <div class="row">
-        <figure>
-            <img src="BEFORE_crop.jpg" alt="Before automatic cropping">
-            <figcaption>Before</figcaption>
-        </figure>
-        <figure>
-            <img src="AFTER_crop.jpg" alt="After automatic cropping">
-            <figcaption>After</figcaption>
-        </figure>
-    </div>
 
 </body>
 </html>

@@ -93,7 +93,7 @@ for image in images:
                     curr = np.sum(channel_1_normalized*channel_2_normalized)
                 else:
                     for norm_row in range(len(rolled_image)):
-                        curr -= np.linalg.norm(rolled_image[norm_row]-channel_2_normalized[norm_row])
+                        curr -= np.linalg.norm(rolled_image[norm_row]-borderless_channel_2[norm_row])
 
                 if curr > minim:
                     minim = curr
@@ -102,7 +102,7 @@ for image in images:
 
     def align(channel_1, channel_2, loss, string):
         disp = pyramid(channel_1, channel_2, loss)
-        print(f"{string}:", disp)
+        print(f"{string}:", f"({disp[1]}, {disp[0]}")
         return np.roll(channel_1, disp, axis = (0,1))
 
     temp_b = border_remover(b)
