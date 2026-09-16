@@ -204,7 +204,7 @@
 
     <h2> Speedup</h2>
 
-    My first run on a tif took 86 seconds. Two Python loops inside the search, one rolling row by row and one summing per-row norms, were running thousands of times per candidate shift. Replacing them with a single np.roll on both axes and a single np.sum brought it down to a few seconds. The spec says aim for under a minute per image and it wasn't kidding.
+    My first run on a tif took 86 seconds. Two Python loops inside the search, one rolling row by row and one summing per-row norms, were running thousands of times per candidate shift. Replacing them with a single np.roll on both axes and a single np.sum brought it down to a few seconds.
     <p></p>
 
     <h2>My own selections</h2>
