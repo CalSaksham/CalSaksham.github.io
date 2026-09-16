@@ -1,42 +1,277 @@
-# CS180 (CS280A): Project 1 starter Python code
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project 1: Colorizing the Prokudin-Gorskii Photo Collection</title>
+    <style>
+        body {
+            font-family: -apple-system, Helvetica, Arial, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            line-height: 1.6;
+            color: #222;
+        }
+        h1 {
+            font-size: 30px;
+            margin-bottom: 0;
+        }
+        h2 {
+            font-size: 22px;
+            margin-top: 48px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        h3 {
+            font-size: 18px;
+            margin-top: 32px;
+        }
+        .row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        figure {
+            margin: 0;
+            flex: 1;
+            min-width: 260px;
+        }
+        figure img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+        figcaption {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 15px;
+            margin-top: 16px;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            font-weight: 600;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Project 1: Colorizing the Prokudin-Gorskii Photo Collection</h1>
+    <p>CS180 &middot; Saksham</p>
 
-# these are just some suggested libraries
-# instead of scikit-image you could use matplotlib and opencv to read, write, and display images
+    <h2>Overview</h2>
+    <!-- Your commentary: what the problem is, why the three chunks need aligning. -->
+    <p></p>
 
-import numpy as np
-import skimage as sk
-import skimage.io as skio
+    <h2>Approach</h2>
+    <!-- Your commentary: exhaustive search over [-15, 15], np.roll, the metric you used. -->
+    <p></p>
 
-# name of the input file
-imname = 'cathedral.jpg'
+    <h3>Ignoring the borders</h3>
+    <!-- Your commentary: scoring on interior pixels only.
+         Concrete numbers you can cite: cathedral went from (1, -1) and (8, -1)
+         scoring the full frame, to (5, 2) and (11, 3) scoring the interior. -->
+    <p></p>
 
-# read in the image
-im = skio.imread(imname)
+    <h3>The metric</h3>
+    <!-- Your commentary: L2 and NCC, what each measures, where they disagreed.
+         Concrete case: on cathedral's red channel NCC scored the wrong shift at
+         0.7524 against 0.7453 for the correct one. -->
+    <p></p>
 
-# convert to double (might want to do this later on to save memory)    
-im = sk.img_as_float(im)
-    
-# compute the height of each part (just 1/3 of total)
-height = np.floor(im.shape[0] / 3.0).astype(np.int)
+    <h2>Single-scale alignment</h2>
+    <!-- Your commentary on the low-resolution results. -->
+    <p></p>
 
-# separate color channels
-b = im[:height]
-g = im[height: 2*height]
-r = im[2*height: 3*height]
+    <table>
+        <tr><th>Image</th><th>G &rarr; B</th><th>R &rarr; B</th></tr>
+        <tr><td>cathedral.jpg</td><td></td><td></td></tr>
+        <tr><td>monastery.jpg</td><td></td><td></td></tr>
+        <tr><td>tobolsk.jpg</td><td></td><td></td></tr>
+    </table>
 
-# align the images
-# functions that might be useful for aligning the images include:
-# np.roll, np.sum, sk.transform.rescale (for multiscale)
+    <div class="row">
+        <figure>
+            <img src="cathedral.jpg_out.jpg" alt="Cathedral, aligned">
+            <figcaption>cathedral</figcaption>
+        </figure>
+        <figure>
+            <img src="monastery.jpg_out.jpg" alt="Monastery, aligned">
+            <figcaption>monastery</figcaption>
+        </figure>
+        <figure>
+            <img src="tobolsk.jpg_out.jpg" alt="Tobolsk, aligned">
+            <figcaption>tobolsk</figcaption>
+        </figure>
+    </div>
 
-### ag = align(g, b)
-### ar = align(r, b)
-# create a color image
-im_out = np.dstack([ar, ag, b])
+    <h2>Multi-scale pyramid alignment</h2>
+    <!-- Your commentary: why exhaustive search breaks on the .tif files, how the
+         pyramid works, and the anti-aliasing point about blurring before subsampling. -->
+    <p></p>
 
-# save the image
-fname = '/out_path/out_fname.jpg'
-skio.imsave(fname, im_out)
+    <h3>Computed offsets</h3>
+    <table>
+        <tr><th>Image</th><th>G &rarr; B</th><th>R &rarr; B</th></tr>
+        <tr><td>church.tif</td><td></td><td></td></tr>
+        <tr><td>emir.tif</td><td></td><td></td></tr>
+        <tr><td>harvesters.tif</td><td></td><td></td></tr>
+        <tr><td>icon.tif</td><td></td><td></td></tr>
+        <tr><td>ilemselga.tif</td><td></td><td></td></tr>
+        <tr><td>melons.tif</td><td></td><td></td></tr>
+        <tr><td>religous_painting.tif</td><td></td><td></td></tr>
+        <tr><td>self_portrait.tif</td><td></td><td></td></tr>
+        <tr><td>siren.tif</td><td></td><td></td></tr>
+        <tr><td>three_generations.tif</td><td></td><td></td></tr>
+    </table>
 
-# display the image
-skio.imshow(im_out)
-skio.show()
+    <div class="row">
+        <figure>
+            <img src="church.tif_out.jpg" alt="Church, aligned">
+            <figcaption>church</figcaption>
+        </figure>
+        <figure>
+            <img src="emir.tif_out.jpg" alt="Emir of Bukhara, aligned">
+            <figcaption>emir</figcaption>
+        </figure>
+        <figure>
+            <img src="harvesters.tif_out.jpg" alt="Harvesters, aligned">
+            <figcaption>harvesters</figcaption>
+        </figure>
+    </div>
+
+    <div class="row">
+        <figure>
+            <img src="icon.tif_out.jpg" alt="Icon, aligned">
+            <figcaption>icon</figcaption>
+        </figure>
+        <figure>
+            <img src="ilemselga.tif_out.jpg" alt="Ilemselga, aligned">
+            <figcaption>ilemselga</figcaption>
+        </figure>
+        <figure>
+            <img src="melons.tif_out.jpg" alt="Melons, aligned">
+            <figcaption>melons</figcaption>
+        </figure>
+    </div>
+
+    <div class="row">
+        <figure>
+            <img src="religous_painting.tif_out.jpg" alt="Religious painting, aligned">
+            <figcaption>religous_painting</figcaption>
+        </figure>
+        <figure>
+            <img src="self_portrait.tif_out.jpg" alt="Self portrait, aligned">
+            <figcaption>self_portrait</figcaption>
+        </figure>
+        <figure>
+            <img src="siren.tif_out.jpg" alt="Siren, aligned">
+            <figcaption>siren</figcaption>
+        </figure>
+    </div>
+
+    <div class="row">
+        <figure>
+            <img src="three_generations.tif_out.jpg" alt="Three generations, aligned">
+            <figcaption>three_generations</figcaption>
+        </figure>
+        <figure></figure>
+        <figure></figure>
+    </div>
+
+    <h2>My own selections</h2>
+    <!-- Your commentary: where you found these and why you picked them.
+         Each one is shown next to the Library of Congress reference version. -->
+    <p></p>
+
+    <table>
+        <tr><th>Image</th><th>G &rarr; B</th><th>R &rarr; B</th></tr>
+        <tr><td>wharf.tif</td><td></td><td></td></tr>
+        <tr><td>Master PNP Prok 01800 01860a.tif</td><td></td><td></td></tr>
+        <tr><td>Master PNP Prok 01800 01864a.tif</td><td></td><td></td></tr>
+    </table>
+
+    <h3>Wharf</h3>
+    <!-- Your commentary on this one. -->
+    <p></p>
+    <div class="row">
+        <figure>
+            <img src="wharf.tif_out.jpg" alt="Wharf, my alignment">
+            <figcaption>My output</figcaption>
+        </figure>
+        <figure>
+            <img src="REFERENCE_wharf.jpg" alt="Wharf, Library of Congress reference">
+            <figcaption>Library of Congress reference</figcaption>
+        </figure>
+    </div>
+
+    <h3>Sheep in a field</h3>
+    <!-- Your commentary on this one. -->
+    <p></p>
+    <div class="row">
+        <figure>
+            <img src="Master PNP Prok 01800 01860a.tif_out.jpg" alt="Sheep, my alignment">
+            <figcaption>My output</figcaption>
+        </figure>
+        <figure>
+            <img src="REFERENCE_02152u.jpg" alt="Sheep, Library of Congress reference">
+            <figcaption>Library of Congress reference</figcaption>
+        </figure>
+    </div>
+
+    <h3>Blossoming tree</h3>
+    <!-- Your commentary on this one. -->
+    <p></p>
+    <div class="row">
+        <figure>
+            <img src="Master PNP Prok 01800 01864a.tif_out.jpg" alt="Blossoming tree, my alignment">
+            <figcaption>My output</figcaption>
+        </figure>
+        <figure>
+            <img src="REFERENCE_02155u.jpg" alt="Blossoming tree, Library of Congress reference">
+            <figcaption>Library of Congress reference</figcaption>
+        </figure>
+    </div>
+
+    <h2>Where it failed</h2>
+    <!-- Your commentary. Emir: the robe is saturated blue, so it reads bright through
+         the blue filter and nearly black through the red one, and a metric comparing
+         raw intensities has nothing to lock onto there.
+         Church, if still off: mostly smooth water and sky, so the score surface is
+         nearly flat and the correct shift barely stands out. -->
+    <p></p>
+
+    <h2>Bells and whistles</h2>
+
+    <h3>Automatic cropping</h3>
+    <!-- Your commentary: per-row and per-column variance, threshold relative to the
+         image's own mean variance, scan inward from each edge and stop at the first
+         line above threshold. Innermost box across all three channels so they crop
+         identically and the displacements stay comparable. -->
+    <p></p>
+
+    <div class="row">
+        <figure>
+            <img src="BEFORE_crop.jpg" alt="Before automatic cropping">
+            <figcaption>Before</figcaption>
+        </figure>
+        <figure>
+            <img src="AFTER_crop.jpg" alt="After automatic cropping">
+            <figcaption>After</figcaption>
+        </figure>
+    </div>
+
+</body>
+</html>
