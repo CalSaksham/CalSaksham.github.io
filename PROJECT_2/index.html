@@ -73,7 +73,7 @@
 
     <h2>Overview</h2>
 
-    The goal of this project was to fundamentally understand and emulate how photography was traditionally stitched together to form colored images some time ago. Using most of numpy and scikit/sckit.io I was able to convert three discrete still exposure taken back to back into three color channels and align them together to form the target colored image. The reason why there was a need for allignment is because there might be subtle perturbations between these image shots such as brightness change or slight movements which might need to be alligned precisely for the purpose of overlapping the color channels. For which I used a brute force search on the displacement vector for smaller sized images, and ran a recursive search of increasingly downscaled pixels for bigger images.
+    The goal of this project was to fundamentally understand and emulate how photography was traditionally stitched together to form colored images some time ago. Using most of numpy and scikit/scikit.io I was able to convert three discrete still exposure taken back to back into three color channels and align them together to form the target colored image. The reason why there was a need for alignment is because there might be subtle perturbations between these image shots such as brightness change or slight movements which might need to be aligned precisely for the purpose of overlapping the color channels. For which I used a brute force search on the displacement vector for smaller sized images, and ran a recursive search of increasingly downscaled pixels for bigger images.
     <p></p>
 
     <h2>Approach</h2>
@@ -84,7 +84,7 @@
 
     <h2>First pass</h2>
 
-    My first real cathedral result was (-1, 1) and (-1, 8). Now it's (2, 5) and (3, 11). I ran print statements across the loss function output and realized the problem was the plate borders. The black frame and bright scanning margins are high contrast, and they sit in the same place in all three chunks no matter how the actual photo is offset. L2 tried to match them and got pulled toward zero. Once I stopped scoring on the borders, cathedral snapped to (5, 2) and (11, 3).
+    My first real cathedral result was (-1, 1) and (-1, 8). Now it's (2, 5) and (3, 12). I ran print statements across the loss function output and realized the problem was the plate borders. The black frame and bright scanning margins are high contrast, and they sit in the same place in all three chunks no matter how the actual photo is offset. L2 tried to match them and got pulled toward zero. Once I stopped scoring on the borders, cathedral snapped to (2, 5) and (3, 12).
     <p></p>
 
 
@@ -141,7 +141,7 @@
         </figure>
         <figure>
             <img src="emir.tif_out.jpg" alt="Emir of Bukhara, aligned">
-            <figcaption>emir (visible misalginment)</figcaption>
+            <figcaption>emir (visible misalignment)</figcaption>
         </figure>
         <figure>
             <img src="harvesters.tif_out.jpg" alt="Harvesters, aligned">
@@ -199,7 +199,7 @@
 
     <h2> NCC bug</h2>
 
-    My NCC scored cathedral's red channel at (8, 3) with 0.7524 and the correct (11, 3) with 0.7453. I printed every score in the window and the surface was a smooth dome, not a sharp peak. That means the metric was correlating the low-frequency stuff, the sky gradient and vignetting, instead of the cathedral's edges. Restricting the comparison to the middle 60% of the image, where the vignetting isn't, fixed it.
+    My NCC scored cathedral's red channel at (3, 8) with 0.7524 and the correct (3, 11) with 0.7453. I printed every score in the window and the surface was a smooth dome, not a sharp peak. That means the metric was correlating the low-frequency stuff, the sky gradient and vignetting, instead of the cathedral's edges. Restricting the comparison to the middle 60% of the image, where the vignetting isn't, fixed it.
     <p></p>
 
     <h2> Speedup</h2>
