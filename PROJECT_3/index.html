@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project 2: Fun with Filters and Frequencies</title>
+    <style>
+        body {
+            font-family: -apple-system, Helvetica, Arial, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            line-height: 1.6;
+            color: #222;
+        }
+        h1 {
+            font-size: 30px;
+            margin-bottom: 0;
+        }
+        h2 {
+            font-size: 22px;
+            margin-top: 48px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        h3 {
+            font-size: 18px;
+            margin-top: 32px;
+        }
+        .row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+        figure {
+            margin: 0;
+            flex: 1;
+            min-width: 180px;
+        }
+        figure img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+        figcaption {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 12px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Project 2: Fun with Filters and Frequencies</h1>
+    <p>CS180 &middot; Saksham</p>
+
+    <h2>Part 1.1: Convolutions from Scratch</h2>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+    <h3>Four loops</h3>
+<pre>
+def convolute(img, filter):
+    out = np.zeros((img.shape[0]+(filter.shape[0]-1), img.shape[1] + (filter.shape[1]-1)))
+    for i in range(len(img)):
+        for j in range(len(img[0])):
+            for x in range(len(filter)-1,-1,-1):
+                for y in range(len(filter[0])-1,-1,-1):
+                    out[i+x][j+y] += img[i][j]*filter[x][y]
+        
+    return out
+</pre>
+
+    <h3>Two loops</h3>
+<pre>
+def convolute2for(img, filter):
+    out = np.zeros((img.shape[0]+(filter.shape[0]-1), img.shape[1] + (filter.shape[1]-1)))
+    pad = np.zeros((img.shape[0]+ 2*(filter.shape[0]-1), img.shape[1] + 2* (filter.shape[1]-1)))
+    pad[filter.shape[0]-1 : filter.shape[0]-1+img.shape[0], filter.shape[1]-1 : filter.shape[1]-1+img.shape[1]] = img
+
+    filter = np.flip(filter)
+
+    for i in range(len(out)):
+        for j in range(len(out[0])):
+            out[i][j] += np.sum(filter * pad[i:i+len(filter), j:j+len(filter[0])])
+    return out
+</pre>
+
+    <h3>Runtime</h3>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
+
+    <h3>Boundaries</h3>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+
+    <h3>Results on my photo</h3>
+    <div class="row">
+        <figure>
+            <img src="images/me_gray.png" alt="Grayscale photo">
+            <figcaption>original (grayscale)</figcaption>
+        </figure>
+        <figure>
+            <img src="images/me_box.png" alt="Box filter">
+            <figcaption>9x9 box filter</figcaption>
+        </figure>
+        <figure>
+            <img src="images/me_dx.png" alt="Dx">
+            <figcaption>Dx</figcaption>
+        </figure>
+        <figure>
+            <img src="images/me_dy.png" alt="Dy">
+            <figcaption>Dy</figcaption>
+        </figure>
+    </div>
+
+    <div class="row">
+        <figure>
+            <img src="images/me_box_mine.png" alt="My convolution">
+            <figcaption>my implementation</figcaption>
+        </figure>
+        <figure>
+            <img src="images/me_box_scipy.png" alt="scipy convolution">
+            <figcaption>scipy.signal.convolve2d</figcaption>
+        </figure>
+    </div>
+
+    <h2>Part 1.2: Finite Difference Operator</h2>
+
+    <div class="row">
+        <figure>
+            <img src="images/cam_dx.png" alt="Partial x">
+            <figcaption>partial derivative in x</figcaption>
+        </figure>
+        <figure>
+            <img src="images/cam_dy.png" alt="Partial y">
+            <figcaption>partial derivative in y</figcaption>
+        </figure>
+        <figure>
+            <img src="images/cam_mag.png" alt="Gradient magnitude">
+            <figcaption>gradient magnitude</figcaption>
+        </figure>
+        <figure>
+            <img src="images/cam_edges.png" alt="Binarized edges">
+            <figcaption>binarized, threshold = 0.1</figcaption>
+        </figure>
+    </div>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+
+    <h2>Part 1.3: Derivative of Gaussian (DoG) Filter</h2>
+
+    <h3>Blur, then finite difference</h3>
+    <div class="row">
+        <figure>
+            <img src="images/cam_blur.png" alt="Blurred">
+            <figcaption>blurred (sigma = 1)</figcaption>
+        </figure>
+        <figure>
+            <img src="images/cam_blur_mag.png" alt="Gradient magnitude">
+            <figcaption>gradient magnitude</figcaption>
+        </figure>
+        <figure>
+            <img src="images/cam_blur_edges.png" alt="Binarized edges">
+            <figcaption>binarized, threshold = 0.1</figcaption>
+        </figure>
+    </div>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt.</p>
+
+    <h3>DoG filters</h3>
+    <div class="row">
+        <figure>
+            <img src="images/dog_x_filter.png" alt="DoG x filter">
+            <figcaption>DoG x filter</figcaption>
+        </figure>
+        <figure>
+            <img src="images/dog_y_filter.png" alt="DoG y filter">
+            <figcaption>DoG y filter</figcaption>
+        </figure>
+        <figure>
+            <img src="images/cam_dog_mag.png" alt="DoG gradient magnitude">
+            <figcaption>gradient magnitude (DoG)</figcaption>
+        </figure>
+        <figure>
+            <img src="images/cam_dog_edges.png" alt="DoG binarized edges">
+            <figcaption>binarized (DoG)</figcaption>
+        </figure>
+    </div>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur.</p>
+
+    <h2>Part 2.1: Image Sharpening</h2>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.</p>
+
+    <h3>Taj Mahal</h3>
+    <div class="row">
+        <figure>
+            <img src="images/taj.png" alt="Original">
+            <figcaption>original</figcaption>
+        </figure>
+        <figure>
+            <img src="images/taj_blur.png" alt="Blurred">
+            <figcaption>blurred</figcaption>
+        </figure>
+        <figure>
+            <img src="images/taj_high.png" alt="High frequencies">
+            <figcaption>high frequencies</figcaption>
+        </figure>
+        <figure>
+            <img src="images/taj_sharp.png" alt="Sharpened">
+            <figcaption>sharpened (alpha = 5)</figcaption>
+        </figure>
+    </div>
+
+    <h3>Virat</h3>
+    <div class="row">
+        <figure>
+            <img src="images/other.png" alt="Original">
+            <figcaption>original</figcaption>
+        </figure>
+        <figure>
+            <img src="images/other_blur.png" alt="Blurred">
+            <figcaption>blurred</figcaption>
+        </figure>
+        <figure>
+            <img src="images/other_high.png" alt="High frequencies">
+            <figcaption>high frequencies</figcaption>
+        </figure>
+        <figure>
+            <img src="images/other_sharp.png" alt="Sharpened">
+            <figcaption>sharpened (alpha = 5)</figcaption>
+        </figure>
+    </div>
+
+    <h3>Varying the sharpening amount</h3>
+    <div class="row">
+        <figure>
+            <img src="images/taj_a05.png" alt="alpha 0.5">
+            <figcaption>alpha = 0.5</figcaption>
+        </figure>
+        <figure>
+            <img src="images/taj_a1.png" alt="alpha 1">
+            <figcaption>alpha = 1</figcaption>
+        </figure>
+        <figure>
+            <img src="images/taj_a2.png" alt="alpha 2">
+            <figcaption>alpha = 2</figcaption>
+        </figure>
+        <figure>
+            <img src="images/taj_a5.png" alt="alpha 5">
+            <figcaption>alpha = 5</figcaption>
+        </figure>
+    </div>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti.</p>
+
+    <h3>Blur a sharp image, then sharpen it</h3>
+    <div class="row">
+        <figure>
+            <img src="images/eval_orig.png" alt="Original">
+            <figcaption>original</figcaption>
+        </figure>
+        <figure>
+            <img src="images/eval_blur.png" alt="Blurred">
+            <figcaption>blurred</figcaption>
+        </figure>
+        <figure>
+            <img src="images/eval_resharp.png" alt="Re-sharpened">
+            <figcaption>re-sharpened</figcaption>
+        </figure>
+    </div>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint.</p>
+
+    <h2>Part 2.2: Hybrid Images</h2>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.</p>
+
+    <h3>Campanile + Eiffel Tower: full process</h3>
+    <div class="row">
+        <figure>
+            <img src="images/hyb_im1.png" alt="Input 1">
+            <figcaption>input 1 (high frequency)</figcaption>
+        </figure>
+        <figure>
+            <img src="images/hyb_im2.png" alt="Input 2">
+            <figcaption>input 2 (low frequency)</figcaption>
+        </figure>
+        <figure>
+            <img src="images/hyb_im1_aligned.png" alt="Aligned 1">
+            <figcaption>aligned input 1</figcaption>
+        </figure>
+        <figure>
+            <img src="images/hyb_im2_aligned.png" alt="Aligned 2">
+            <figcaption>aligned input 2</figcaption>
+        </figure>
+    </div>
+
+    <div class="row">
+        <figure>
+            <img src="images/hyb_high.png" alt="High pass">
+            <figcaption>high pass (sigma1 = 6)</figcaption>
+        </figure>
+        <figure>
+            <img src="images/hyb_low.png" alt="Low pass">
+            <figcaption>low pass (sigma2 = 10)</figcaption>
+        </figure>
+    </div>
+
+    <div class="row">
+        <figure>
+            <img src="images/fft_im1.png" alt="FFT input 1">
+            <figcaption>FFT input 1</figcaption>
+        </figure>
+        <figure>
+            <img src="images/fft_im2.png" alt="FFT input 2">
+            <figcaption>FFT input 2</figcaption>
+        </figure>
+        <figure>
+            <img src="images/fft_high.png" alt="FFT high pass">
+            <figcaption>FFT high pass</figcaption>
+        </figure>
+        <figure>
+            <img src="images/fft_low.png" alt="FFT low pass">
+            <figcaption>FFT low pass</figcaption>
+        </figure>
+        <figure>
+            <img src="images/fft_hybrid.png" alt="FFT hybrid">
+            <figcaption>FFT hybrid</figcaption>
+        </figure>
+    </div>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</p>
+
+    <figure style="max-width: 450px; margin: 16px auto;">
+        <img src="images/hyb_result.png" alt="Hybrid result">
+        <figcaption>hybrid result</figcaption>
+    </figure>
+
+    <h3>Derek + Nutmeg</h3>
+    <div class="row">
+        <figure>
+            <img src="images/derek.png" alt="Derek">
+            <figcaption>Derek</figcaption>
+        </figure>
+        <figure>
+            <img src="images/nutmeg.png" alt="Nutmeg">
+            <figcaption>Nutmeg</figcaption>
+        </figure>
+        <figure>
+            <img src="images/derek_nutmeg.png" alt="Hybrid">
+            <figcaption>hybrid</figcaption>
+        </figure>
+    </div>
+
+    <h3>Sachin + Virat</h3>
+    <div class="row">
+        <figure>
+            <img src="images/hyb3_im1.png" alt="Sachin">
+            <figcaption>Sachin</figcaption>
+        </figure>
+        <figure>
+            <img src="images/hyb3_im2.png" alt="Virat">
+            <figcaption>Virat</figcaption>
+        </figure>
+        <figure>
+            <img src="images/hyb3_result.png" alt="Hybrid">
+            <figcaption>hybrid</figcaption>
+        </figure>
+    </div>
+
+    <h2>Part 2.3: Gaussian and Laplacian Stacks</h2>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.</p>
+
+    <h3>Apple</h3>
+    <div class="row">
+        <figure><img src="images/apple_g0.png" alt="G0"><figcaption>Gaussian 0</figcaption></figure>
+        <figure><img src="images/apple_g1.png" alt="G1"><figcaption>Gaussian 1</figcaption></figure>
+        <figure><img src="images/apple_g2.png" alt="G2"><figcaption>Gaussian 2</figcaption></figure>
+        <figure><img src="images/apple_g3.png" alt="G3"><figcaption>Gaussian 3</figcaption></figure>
+        <figure><img src="images/apple_g4.png" alt="G4"><figcaption>Gaussian 4</figcaption></figure>
+    </div>
+    <div class="row">
+        <figure><img src="images/apple_l0.png" alt="L0"><figcaption>Laplacian 0</figcaption></figure>
+        <figure><img src="images/apple_l1.png" alt="L1"><figcaption>Laplacian 1</figcaption></figure>
+        <figure><img src="images/apple_l2.png" alt="L2"><figcaption>Laplacian 2</figcaption></figure>
+        <figure><img src="images/apple_l3.png" alt="L3"><figcaption>Laplacian 3</figcaption></figure>
+        <figure><img src="images/apple_l4.png" alt="L4"><figcaption>Laplacian 4</figcaption></figure>
+    </div>
+
+    <h3>Orange</h3>
+    <div class="row">
+        <figure><img src="images/orange_g0.png" alt="G0"><figcaption>Gaussian 0</figcaption></figure>
+        <figure><img src="images/orange_g1.png" alt="G1"><figcaption>Gaussian 1</figcaption></figure>
+        <figure><img src="images/orange_g2.png" alt="G2"><figcaption>Gaussian 2</figcaption></figure>
+        <figure><img src="images/orange_g3.png" alt="G3"><figcaption>Gaussian 3</figcaption></figure>
+        <figure><img src="images/orange_g4.png" alt="G4"><figcaption>Gaussian 4</figcaption></figure>
+    </div>
+    <div class="row">
+        <figure><img src="images/orange_l0.png" alt="L0"><figcaption>Laplacian 0</figcaption></figure>
+        <figure><img src="images/orange_l1.png" alt="L1"><figcaption>Laplacian 1</figcaption></figure>
+        <figure><img src="images/orange_l2.png" alt="L2"><figcaption>Laplacian 2</figcaption></figure>
+        <figure><img src="images/orange_l3.png" alt="L3"><figcaption>Laplacian 3</figcaption></figure>
+        <figure><img src="images/orange_l4.png" alt="L4"><figcaption>Laplacian 4</figcaption></figure>
+    </div>
+
+    <h3>Figure 3.42 recreation</h3>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Omnis voluptas assumenda est, omnis dolor repellendus.</p>
+    <div class="row">
+        <figure><img src="images/fig_apple0.png" alt="a"><figcaption>(a) apple, level 0</figcaption></figure>
+        <figure><img src="images/fig_orange0.png" alt="b"><figcaption>(b) orange, level 0</figcaption></figure>
+        <figure><img src="images/fig_blend0.png" alt="c"><figcaption>(c) blend, level 0</figcaption></figure>
+    </div>
+    <div class="row">
+        <figure><img src="images/fig_apple2.png" alt="d"><figcaption>(d) apple, level 2</figcaption></figure>
+        <figure><img src="images/fig_orange2.png" alt="e"><figcaption>(e) orange, level 2</figcaption></figure>
+        <figure><img src="images/fig_blend2.png" alt="f"><figcaption>(f) blend, level 2</figcaption></figure>
+    </div>
+    <div class="row">
+        <figure><img src="images/fig_apple4.png" alt="g"><figcaption>(g) apple, level 4</figcaption></figure>
+        <figure><img src="images/fig_orange4.png" alt="h"><figcaption>(h) orange, level 4</figcaption></figure>
+        <figure><img src="images/fig_blend4.png" alt="i"><figcaption>(i) blend, level 4</figcaption></figure>
+    </div>
+    <div class="row">
+        <figure><img src="images/fig_apple_sum.png" alt="j"><figcaption>(j) apple, all levels</figcaption></figure>
+        <figure><img src="images/fig_orange_sum.png" alt="k"><figcaption>(k) orange, all levels</figcaption></figure>
+        <figure><img src="images/fig_blend_sum.png" alt="l"><figcaption>(l) blend, all levels</figcaption></figure>
+    </div>
+
+    <h2>Part 2.4: Multiresolution Blending</h2>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi morbi tempus iaculis urna id volutpat lacus laoreet non curabitur gravida arcu ac tortor.</p>
+
+    <h3>Oraple</h3>
+    <div class="row">
+        <figure>
+            <img src="images/apple.png" alt="Apple">
+            <figcaption>apple</figcaption>
+        </figure>
+        <figure>
+            <img src="images/orange.png" alt="Orange">
+            <figcaption>orange</figcaption>
+        </figure>
+        <figure>
+            <img src="images/oraple.png" alt="Oraple">
+            <figcaption>oraple</figcaption>
+        </figure>
+    </div>
+
+    <h3>Saksham + Rhea (vertical seam)</h3>
+    <div class="row">
+        <figure>
+            <img src="images/blend1_a.png" alt="Saksham">
+            <figcaption>Saksham</figcaption>
+        </figure>
+        <figure>
+            <img src="images/blend1_b.png" alt="Rhea">
+            <figcaption>Rhea</figcaption>
+        </figure>
+        <figure>
+            <img src="images/blend1_result.png" alt="Result">
+            <figcaption>result</figcaption>
+        </figure>
+    </div>
+
+    <h3>Sun pizza (circular mask)</h3>
+    <div class="row">
+        <figure>
+            <img src="images/pizza.png" alt="Pizza">
+            <figcaption>pizza</figcaption>
+        </figure>
+        <figure>
+            <img src="images/sun.png" alt="Sun">
+            <figcaption>sun</figcaption>
+        </figure>
+        <figure>
+            <img src="images/sunpizza.png" alt="Result">
+            <figcaption>result</figcaption>
+        </figure>
+    </div>
+
+    <h3>Laplacian stack of the sun pizza</h3>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Viverra maecenas accumsan lacus vel facilisis volutpat est velit egestas.</p>
+    <div class="row">
+        <figure><img src="images/sp_pizza0.png" alt="pizza 0"><figcaption>pizza, level 0</figcaption></figure>
+        <figure><img src="images/sp_sun0.png" alt="sun 0"><figcaption>sun, level 0</figcaption></figure>
+        <figure><img src="images/sp_blend0.png" alt="blend 0"><figcaption>blend, level 0</figcaption></figure>
+    </div>
+    <div class="row">
+        <figure><img src="images/sp_pizza2.png" alt="pizza 2"><figcaption>pizza, level 2</figcaption></figure>
+        <figure><img src="images/sp_sun2.png" alt="sun 2"><figcaption>sun, level 2</figcaption></figure>
+        <figure><img src="images/sp_blend2.png" alt="blend 2"><figcaption>blend, level 2</figcaption></figure>
+    </div>
+    <div class="row">
+        <figure><img src="images/sp_pizza4.png" alt="pizza 4"><figcaption>pizza, level 4</figcaption></figure>
+        <figure><img src="images/sp_sun4.png" alt="sun 4"><figcaption>sun, level 4</figcaption></figure>
+        <figure><img src="images/sp_blend4.png" alt="blend 4"><figcaption>blend, level 4</figcaption></figure>
+    </div>
+
+    <h2>What I learned</h2>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+
+</body>
+</html>
