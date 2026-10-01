@@ -61,7 +61,7 @@
 
     <h2>Part 1.1: Convolutions from Scratch</h2>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p>So I kind of did the four-loop version backwards at first. Instead of each output pixel looking at its neighbors, I had every input pixel stamp a scaled copy of the kernel onto the output, which honestly just felt more natural to me. My first try was a mess, though. I was convinced the bottom-right corner of the filter had to land on the top-left of the output, so I subtracted the filter length from my indices. That made them go negative, and numpy just silently wrapped them around to the other side of the image, with no error, nothing. It took me a while (and a page of scribbles) to realize the stamping approach actually flips the kernel on its own. So when I also threw in np.flip, I'd basically flipped it twice and was doing correlation without knowing it. For the two-loop version I went the more standard route: pad the image with zeros myself, flip the kernel once, then for every output pixel just multiply the window by the kernel and add it up.</p>
 
     <h3>Four loops</h3>
 <pre>
@@ -92,10 +92,10 @@ def convolute2for(img, filter):
 </pre>
 
     <h3>Runtime</h3>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
+    <p>The four-loop version was painfully slow. I had to shrink my photo to about 400 pixels on the long side just to get it to finish, and the 9×9 box filter was much worse than Dx or Dy, because every pixel touches 81 kernel entries instead of 3. The two-loop version was noticeably faster, because the inner multiply-and-sum happens inside numpy instead of in Python. scipy was basically instant, since the whole thing runs in compiled code.</p>
 
     <h3>Boundaries</h3>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+    <p>I used zero padding everywhere. You can see it in the box-filtered image: there's a dark band around the border, because pixels near the edge are averaging in black zeros that were never part of the photo. Dx and Dy also light up along the image border, since the jump from real pixels to zero padding looks like a strong edge to a derivative filter. scipy handles it the same way with its default fill value of 0, which is why our outputs match exactly.</p>
 
     <h3>Results on my photo</h3>
     <div class="row">
@@ -149,7 +149,7 @@ def convolute2for(img, filter):
         </figure>
     </div>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+    <p>The first time I displayed the derivatives, half the edges were missing. Dx and Dy produce negative values, and the display was clipping all of them to black. Shifting by 0.5 so that zero shows as gray fixed that. For the binarized edge image I tried a few thresholds and landed on 0.1. Lower than that, the grass at the bottom turned weird. Higher than that, the tripod legs and the outline of the coat started breaking apart. At 0.1 the cameraman, the camera, and the tripod come through clearly, and some grass noise survives. I accepted that trade.</p>
 
     <h2>Part 1.3: Derivative of Gaussian (DoG) Filter</h2>
 
@@ -169,7 +169,7 @@ def convolute2for(img, filter):
         </figure>
     </div>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt.</p>
+    <p>Blurring with a Gaussian (sigma 1) before taking derivatives cleaned things up a lot. The edges got thicker and smoother, and most of the grass speckle disappeared, because blurring averages out the tiny pixel-to-pixel noise the finite difference was reacting to. The gradients also got weaker overall, since blurring spreads each edge across several pixels.</p>
 
     <h3>DoG filters</h3>
     <div class="row">
@@ -191,11 +191,11 @@ def convolute2for(img, filter):
         </figure>
     </div>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur.</p>
+    <p>Instead of blurring and then differentiating, I convolved the Gaussian with Dx and Dy first. That gives two small kernels that look like a soft blob, light on one side and dark on the other. Convolving the image once with each gives the same result as the two-step version, because convolution is associative. The detail that matters is keeping everything in full mode: if you crop between steps, the borders stop matching.</p>
 
     <h2>Part 2.1: Image Sharpening</h2>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.</p>
+    <p>A Gaussian blur is a low-pass filter: it keeps the smooth stuff and throws away detail. Subtracting the blurred image from the original leaves only the detail, meaning the edges and texture. Adding a scaled amount of that detail back makes the image look sharper. The original image is itself a convolution with the impulse filter (a 1 in the middle, zeros everywhere else). That lets the whole thing collapse into one kernel.</p>
 
     <h3>Taj Mahal</h3>
     <div class="row">
@@ -257,7 +257,7 @@ def convolute2for(img, filter):
         </figure>
     </div>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti.</p>
+    <p>At α = 0.5 the change is subtle, and the Taj just looks slightly crisper. By α = 2 the edges of the domes and minarets really pop. At α = 5 it's overcooked: bright and dark halos appear along every edge, and any noise in the sky gets amplified along with the real detail. More sharpening isn't more detail; it's more contrast at edges that already exist.</p>
 
     <h3>Blur a sharp image, then sharpen it</h3>
     <div class="row">
@@ -275,11 +275,11 @@ def convolute2for(img, filter):
         </figure>
     </div>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint.</p>
+    <p>I took a sharp photo of Berkeley, blurred it, and tried to sharpen it back. The re-sharpened version definitely looks crisper than the blurred one, but next to the original it's obvious what's missing. Fine textures that the blur wiped out don't come back. Sharpening can only boost the edges that survived the blur but it can't invent information that's gone.</p>
 
     <h2>Part 2.2: Hybrid Images</h2>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.</p>
+    <p>A hybrid image keeps only the low frequencies of one picture and only the high frequencies of another, then adds them. Up close your eyes lock onto the fine detail, so you see the high-frequency image. From far away that detail disappears, and only the smooth shape of the other image is left.</p>
 
     <h3>Campanile + Eiffel Tower: full process</h3>
     <div class="row">
@@ -335,7 +335,7 @@ def convolute2for(img, filter):
         </figure>
     </div>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</p>
+    <p>My first sigmas were backwards: I barely blurred the low-pass image and heavily blurred the high-pass one, so the result was just two photos overlaid. For the Campanile and the Eiffel Tower I settled on sigma1 = 6 for the high-pass (the Campanile) and sigma2 = 10 for the low-pass (the Eiffel Tower). Keeping the low-pass sigma bigger leaves a gap between the two frequency bands, so they don't blend into a confusing double image. Two tall, narrow towers also line up naturally, which is a big part of why this pair works.</p>
 
     <figure style="max-width: 450px; margin: 16px auto;">
         <img src="images/hyb_result.png" alt="Hybrid result">
@@ -376,7 +376,7 @@ def convolute2for(img, filter):
 
     <h2>Part 2.3: Gaussian and Laplacian Stacks</h2>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.</p>
+    <p>A Gaussian stack is the same image blurred again and again without ever shrinking it, so every level has the original size. Each Laplacian level is the difference between two neighboring Gaussian levels, meaning the band of detail lost between one blur and the next. The last Laplacian level is just the final, blurriest Gaussian level, which makes the stack complete. My first version crashed because of numpy slicing: out[:,:,i:i+1] has shape (H, W, 1) while a 2D image is (H, W), so they won't line up. The sanity check I relied on was that adding every Laplacian level back together has to give you the exact original image.</p>
 
     <h3>Apple</h3>
     <div class="row">
@@ -411,7 +411,7 @@ def convolute2for(img, filter):
     </div>
 
     <h3>Figure 3.42 recreation</h3>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Omnis voluptas assumenda est, omnis dolor repellendus.</p>
+    <p>Each row is one band of frequencies: levels 0, 2, and 4, from fine to coarse. The left column is the apple's band weighted by the blurred mask, the middle is the orange's band weighted by the inverse mask, and the right is their sum. The bottom row adds every level together.</p>
     <div class="row">
         <figure><img src="images/fig_apple0.png" alt="a"><figcaption>(a) apple, level 0</figcaption></figure>
         <figure><img src="images/fig_orange0.png" alt="b"><figcaption>(b) orange, level 0</figcaption></figure>
@@ -435,7 +435,7 @@ def convolute2for(img, filter):
 
     <h2>Part 2.4: Multiresolution Blending</h2>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi morbi tempus iaculis urna id volutpat lacus laoreet non curabitur gravida arcu ac tortor.</p>
+    <p>My first oraple had an obvious seam down the middle. The problem was my blur: I was reusing a sigma = 1 Gaussian, and stacking five of those only gets you to an effective sigma of about 2. So even the coarsest level, which carries the overall color difference between a dark apple and a bright orange, was being cut almost as hard as a straight line. Switching to a much bigger Gaussian (sigma = 8) fixed the color jump. A thin line was still visible after that, though, and it turned out the finest level of the mask was a perfectly sharp step. I shifted the mask stack by a couple of levels, so even level 0 gets a slightly softened mask, and the line disappeared.</p>
 
     <h3>Oraple</h3>
     <div class="row">
@@ -486,7 +486,7 @@ def convolute2for(img, filter):
     </div>
 
     <h3>Laplacian stack of the sun pizza</h3>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Viverra maecenas accumsan lacus vel facilisis volutpat est velit egestas.</p>
+    <p>The circle mask worked, but I could still see a faint ring at first. Part of that was the blend width, and part of it was the content: blending can hide differences in brightness and texture, but it can't make an olive look like a sunspot. Putting the edge of the circle where the pizza is plainer helped more than tweaking any parameter.</p>
     <div class="row">
         <figure><img src="images/sp_pizza0.png" alt="pizza 0"><figcaption>pizza, level 0</figcaption></figure>
         <figure><img src="images/sp_sun0.png" alt="sun 0"><figcaption>sun, level 0</figcaption></figure>
@@ -505,7 +505,7 @@ def convolute2for(img, filter):
 
     <h2>What I learned</h2>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+    <p>Honestly, the biggest thing I took away is that I don't really see images as just pictures anymore. They're more like layers of detail stacked on top of each other, from the big blurry shapes down to the tiny textures. Once that clicked, the whole project kind of became the same trick over and over. Sharpening is just turning up the fine layers a bit. A hybrid image is taking the blurry layers from one photo and the fine ones from another. And the oraple only stopped having that ugly seam once I blended each layer separately instead of all at once. I guess the other thing I learned is more about how I debug. Half my "bugs" weren't bugs at all, like the Dx output that looked almost black and was actually completely right. I stopped staring at code and started just showing myself every in-between image, and that probably saved me hours.</p>
 
 </body>
 </html>
