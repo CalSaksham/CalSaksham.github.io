@@ -71,7 +71,7 @@
 
 <pre>
 def interpolate(image, noise, t):
-    return (1-t)*noise + t*image
+  return (1-t)*noise + t*image
 </pre>
 
     <figure style="margin-top: 16px;">
@@ -102,7 +102,7 @@ def interpolate(image, noise, t):
 
 <pre>
 def one_step_denoise(x, t, condition, predict_velocity):
-    return x + (1-t)*predict_velocity(x,t,condition)
+  return x + (1-t)*predict_velocity(x,t,condition)
 </pre>
 
     <figure style="margin-top: 16px;">
@@ -144,15 +144,13 @@ def one_step_denoise(x, t, condition, predict_velocity):
     <p>[TODO: how euler_sample works, the shortened last step, and how it compares to one-step and blur]</p>
 
 <pre>
-@torch.inference_mode()
 def euler_sample(x_start, t_start, step_size, velocity):
   out = [(t_start, x_start)]
-  i = -1
-  for i in range(int(round((1-t_start)/step_size, 6))):
+  for i in range(int((1-t_start)/step_size)):
     x_start = x_start + (step_size)*velocity(x_start, t_start + i *step_size)
     if i % 4 == 0:
       out.append((t_start + (i+1) *step_size, x_start))
-  if abs(1 - (t_start + (i+1) *step_size)) > 1e-6:
+  if abs(1 - (t_start + (i+1) *step_size)) &gt; 0:
     x_start = x_start + (1 - t_start - (i+1) *step_size)*velocity(x_start, t_start + (i+1) *step_size)
     out.append((1, x_start))
   if out[-1][0] != 1:
@@ -185,10 +183,9 @@ def euler_sample(x_start, t_start, step_size, velocity):
     <p>[TODO: how CFG works and how these compare to the 1.6 samples (same noise)]</p>
 
 <pre>
-def cfg_velocity(x, t, condition, w, predict_velocity, null_condition=''):
-  v_c = predict_velocity(x,t,condition)
-  v_u = predict_velocity(x,t,null_condition)
-  return v_c + w * (v_c - v_u)
+def cfg_velocity(x, t, condition, w, predict_velocity, null_condition=&#x27;&#x27;):
+
+  return predict_velocity(x,t,condition) + w * (predict_velocity(x,t,condition) - predict_velocity(x,t,null_condition))
 </pre>
 
     <figure style="margin-top: 16px;">
@@ -199,6 +196,18 @@ def cfg_velocity(x, t, condition, w, predict_velocity, null_condition=''):
     <h2>Part 3.1: Image-to-Image Editing</h2>
 
     <p>[TODO: how editing works and what changes as the starting time goes up]</p>
+
+<pre>
+def edit(image, noise, t_start, condition, predict_velocity, w=7, step_size=0.02):
+
+  x_start = (1-t_start)*noise + t_start*image
+  for i in range(int((1-t_start)/step_size)):
+    velocity = cfg_velocity(x_start, t_start + i *step_size, condition, w, predict_velocity)
+    x_start = x_start + (step_size)*velocity
+  if abs(1 - (t_start + (i+1) *step_size)) &gt; 0:
+    x_start = x_start + (1 - t_start - (i+1) *step_size)*cfg_velocity(x_start, t_start + (i+1) *step_size, condition, w, predict_velocity)
+  return x_start
+</pre>
 
     <h3>Campanile</h3>
     <figure style="margin-top: 16px;">
@@ -257,12 +266,14 @@ def cfg_velocity(x, t, condition, w, predict_velocity, null_condition=''):
 
 <pre>
 def visual_anagrams(noise, condition_a, condition_b, predict_velocity, w=7, step_size=0.02):
-  def velocity(x, t):
-    v_a = cfg_velocity(x, t, condition_a, w, predict_velocity)
-    v_b = rotate180(cfg_velocity(rotate180(x), t, condition_b, w, predict_velocity))
-    return (v_a + v_b) / 2
-  x_end, _ = euler_sample(noise, 0, step_size, velocity)
-  return x_end
+    x_start = noise
+    for i in range(int(1/step_size)):
+      velocity = (cfg_velocity(x_start, i*step_size, condition_a, w, predict_velocity) + rotate180(cfg_velocity(rotate180(x_start), i*step_size, condition_b, w, predict_velocity)))/2
+      x_start = x_start + (step_size)*velocity
+    if abs((1 - (i+1) * step_size)) &gt; 0:
+      v_b = cfg_velocity(x_start, (i+1)*step_size, condition_b, w, predict_velocity)
+      x_start = x_start + (1 - (i+1) *step_size)*(lowpass(cfg_velocity(x_start, (i+1)*step_size, condition_a, w, predict_velocity)) + v_b - lowpass(v_b))
+    return x_start
 </pre>
 
     <h3>Illusion 1</h3>
@@ -282,12 +293,14 @@ def visual_anagrams(noise, condition_a, condition_b, predict_velocity, w=7, step
 
 <pre>
 def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_size=0.02):
-  def velocity(x, t):
-    v_a = cfg_velocity(x, t, condition_a, w, predict_velocity)
-    v_b = cfg_velocity(x, t, condition_b, w, predict_velocity)
-    return lowpass(v_a) + v_b - lowpass(v_b)
-  x_end, _ = euler_sample(noise, 0, step_size, velocity)
-  return x_end
+    x_start = noise
+    for i in range(int(1/step_size)):
+      v_b = cfg_velocity(x_start, i*step_size, condition_b, w, predict_velocity)
+      velocity = lowpass(cfg_velocity(x_start, i*step_size, condition_a, w, predict_velocity)) + v_b - lowpass(v_b)
+      x_start = x_start + (step_size)*velocity
+    if abs((1 - (i+1) * step_size)) &gt; 0:
+      x_start = x_start + (1 - (i+1) *step_size)*velocity
+    return x_start
 </pre>
 
     <h3>Hybrid 1</h3>
