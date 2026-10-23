@@ -74,29 +74,27 @@ def interpolate(image, noise, t):
     return (1-t)*noise + t*image
 </pre>
 
-    <div class="row">
-        <figure><img src="images/a11_original.png" alt="Original"><figcaption>original</figcaption></figure>
-        <figure><img src="images/a11_t025.png" alt="t = 0.25"><figcaption>t = 0.25</figcaption></figure>
-        <figure><img src="images/a11_t050.png" alt="t = 0.50"><figcaption>t = 0.50</figcaption></figure>
-        <figure><img src="images/a11_t075.png" alt="t = 0.75"><figcaption>t = 0.75</figcaption></figure>
-    </div>
+    <figure style="margin-top: 16px;">
+        <img src="images/a11_training_inputs.png" alt="original and noisy versions at t = 0.25, 0.50, 0.75">
+        <figcaption>original and noisy versions at t = 0.25, 0.50, 0.75</figcaption>
+    </figure>
 
     <h2>Part 1.2: Classical Denoising</h2>
 
     <p>[TODO: the blur sigmas you picked for each t and how well blurring worked]</p>
 
-    <div class="row">
-        <figure><img src="images/a12_noisy_t025.png" alt="Noisy t=0.25"><figcaption>noisy, t = 0.25</figcaption></figure>
-        <figure><img src="images/a12_blur_t025.png" alt="Blurred t=0.25"><figcaption>Gaussian blur, t = 0.25</figcaption></figure>
-    </div>
-    <div class="row">
-        <figure><img src="images/a12_noisy_t050.png" alt="Noisy t=0.50"><figcaption>noisy, t = 0.50</figcaption></figure>
-        <figure><img src="images/a12_blur_t050.png" alt="Blurred t=0.50"><figcaption>Gaussian blur, t = 0.50</figcaption></figure>
-    </div>
-    <div class="row">
-        <figure><img src="images/a12_noisy_t075.png" alt="Noisy t=0.75"><figcaption>noisy, t = 0.75</figcaption></figure>
-        <figure><img src="images/a12_blur_t075.png" alt="Blurred t=0.75"><figcaption>Gaussian blur, t = 0.75</figcaption></figure>
-    </div>
+    <figure style="margin-top: 16px;">
+        <img src="images/a12_blur_t025.png" alt="noisy vs Gaussian blur, t = 0.25">
+        <figcaption>noisy vs Gaussian blur, t = 0.25</figcaption>
+    </figure>
+    <figure style="margin-top: 16px;">
+        <img src="images/a12_blur_t050.png" alt="noisy vs Gaussian blur, t = 0.50">
+        <figcaption>noisy vs Gaussian blur, t = 0.50</figcaption>
+    </figure>
+    <figure style="margin-top: 16px;">
+        <img src="images/a12_blur_t075.png" alt="noisy vs Gaussian blur, t = 0.75">
+        <figcaption>noisy vs Gaussian blur, t = 0.75</figcaption>
+    </figure>
 
     <h2>Part 1.3: One-Step Denoising</h2>
 
@@ -107,49 +105,39 @@ def one_step_denoise(x, t, condition, predict_velocity):
     return x + (1-t)*predict_velocity(x,t,condition)
 </pre>
 
-    <div class="row">
-        <figure><img src="images/a11_original.png" alt="Original"><figcaption>original</figcaption></figure>
-        <figure><img src="images/a11_t025.png" alt="Noisy"><figcaption>noisy, t = 0.25</figcaption></figure>
-        <figure><img src="images/a13_onestep_t025.png" alt="One-step"><figcaption>one-step, t = 0.25</figcaption></figure>
-    </div>
-    <div class="row">
-        <figure><img src="images/a11_original.png" alt="Original"><figcaption>original</figcaption></figure>
-        <figure><img src="images/a11_t050.png" alt="Noisy"><figcaption>noisy, t = 0.50</figcaption></figure>
-        <figure><img src="images/a13_onestep_t050.png" alt="One-step"><figcaption>one-step, t = 0.50</figcaption></figure>
-    </div>
-    <div class="row">
-        <figure><img src="images/a11_original.png" alt="Original"><figcaption>original</figcaption></figure>
-        <figure><img src="images/a11_t075.png" alt="Noisy"><figcaption>noisy, t = 0.75</figcaption></figure>
-        <figure><img src="images/a13_onestep_t075.png" alt="One-step"><figcaption>one-step, t = 0.75</figcaption></figure>
-    </div>
+    <figure style="margin-top: 16px;">
+        <img src="images/a13_onestep_t025.png" alt="original, noisy, one-step estimate, t = 0.25">
+        <figcaption>original, noisy, one-step estimate, t = 0.25</figcaption>
+    </figure>
+    <figure style="margin-top: 16px;">
+        <img src="images/a13_onestep_t050.png" alt="original, noisy, one-step estimate, t = 0.50">
+        <figcaption>original, noisy, one-step estimate, t = 0.50</figcaption>
+    </figure>
+    <figure style="margin-top: 16px;">
+        <img src="images/a13_onestep_t075.png" alt="original, noisy, one-step estimate, t = 0.75">
+        <figcaption>original, noisy, one-step estimate, t = 0.75</figcaption>
+    </figure>
 
     <h2>Part 1.4: Visualizing Velocity</h2>
 
     <p>[TODO: what the predicted vs ground-truth updates show and where the error is biggest]</p>
 
     <figure style="max-width: 300px; margin: 16px 0;">
-        <img src="images/a11_original.png" alt="Original">
+        <img src="images/a11_original.png" alt="original">
         <figcaption>original</figcaption>
     </figure>
-
-    <div class="row">
-        <figure><img src="images/a14_noisy_t025.png" alt="Noisy"><figcaption>noisy, t = 0.25</figcaption></figure>
-        <figure><img src="images/a14_pred_t025.png" alt="Predicted"><figcaption>predicted update</figcaption></figure>
-        <figure><img src="images/a14_gt_t025.png" alt="Ground truth"><figcaption>ground-truth update</figcaption></figure>
-        <figure><img src="images/a14_err_t025.png" alt="Error"><figcaption>error</figcaption></figure>
-    </div>
-    <div class="row">
-        <figure><img src="images/a14_noisy_t050.png" alt="Noisy"><figcaption>noisy, t = 0.50</figcaption></figure>
-        <figure><img src="images/a14_pred_t050.png" alt="Predicted"><figcaption>predicted update</figcaption></figure>
-        <figure><img src="images/a14_gt_t050.png" alt="Ground truth"><figcaption>ground-truth update</figcaption></figure>
-        <figure><img src="images/a14_err_t050.png" alt="Error"><figcaption>error</figcaption></figure>
-    </div>
-    <div class="row">
-        <figure><img src="images/a14_noisy_t075.png" alt="Noisy"><figcaption>noisy, t = 0.75</figcaption></figure>
-        <figure><img src="images/a14_pred_t075.png" alt="Predicted"><figcaption>predicted update</figcaption></figure>
-        <figure><img src="images/a14_gt_t075.png" alt="Ground truth"><figcaption>ground-truth update</figcaption></figure>
-        <figure><img src="images/a14_err_t075.png" alt="Error"><figcaption>error</figcaption></figure>
-    </div>
+    <figure style="margin-top: 16px;">
+        <img src="images/a14_velocity_t025.png" alt="noisy image, predicted update, ground-truth update, error, t = 0.25">
+        <figcaption>noisy image, predicted update, ground-truth update, error, t = 0.25</figcaption>
+    </figure>
+    <figure style="margin-top: 16px;">
+        <img src="images/a14_velocity_t050.png" alt="noisy image, predicted update, ground-truth update, error, t = 0.50">
+        <figcaption>noisy image, predicted update, ground-truth update, error, t = 0.50</figcaption>
+    </figure>
+    <figure style="margin-top: 16px;">
+        <img src="images/a14_velocity_t075.png" alt="noisy image, predicted update, ground-truth update, error, t = 0.75">
+        <figcaption>noisy image, predicted update, ground-truth update, error, t = 0.75</figcaption>
+    </figure>
 
     <h2>Part 1.5: Iterative Denoising with Euler Sampling</h2>
 
@@ -173,34 +161,24 @@ def euler_sample(x_start, t_start, step_size, velocity):
 </pre>
 
     <h3>Trajectory</h3>
-    <div class="row">
-        <figure><img src="images/a15_t050.png" alt="t=0.50"><figcaption>t = 0.50</figcaption></figure>
-        <figure><img src="images/a15_t060.png" alt="t=0.60"><figcaption>t = 0.60</figcaption></figure>
-        <figure><img src="images/a15_t070.png" alt="t=0.70"><figcaption>t = 0.70</figcaption></figure>
-        <figure><img src="images/a15_t080.png" alt="t=0.80"><figcaption>t = 0.80</figcaption></figure>
-        <figure><img src="images/a15_t090.png" alt="t=0.90"><figcaption>t = 0.90</figcaption></figure>
-        <figure><img src="images/a15_t100.png" alt="t=1.00"><figcaption>t = 1.00</figcaption></figure>
-    </div>
-
+    <figure style="margin-top: 16px;">
+        <img src="images/a15_trajectory.png" alt="Euler trajectory starting from t = 0.50">
+        <figcaption>Euler trajectory starting from t = 0.50</figcaption>
+    </figure>
     <h3>Comparison</h3>
-    <div class="row">
-        <figure><img src="images/a11_original.png" alt="Original"><figcaption>original</figcaption></figure>
-        <figure><img src="images/a12_blur_t050.png" alt="Blur"><figcaption>Gaussian blur</figcaption></figure>
-        <figure><img src="images/a13_onestep_t050.png" alt="One-step"><figcaption>one-step</figcaption></figure>
-        <figure><img src="images/a15_t100.png" alt="Euler"><figcaption>Euler</figcaption></figure>
-    </div>
+    <figure style="margin-top: 16px;">
+        <img src="images/a15_comparison.png" alt="original, Gaussian blur, one-step, Euler">
+        <figcaption>original, Gaussian blur, one-step, Euler</figcaption>
+    </figure>
 
     <h2>Part 1.6: Generating Images from Noise</h2>
 
     <p>[TODO: what kinds of images the generic prompt gave you]</p>
 
-    <div class="row">
-        <figure><img src="images/a16_sample0.png" alt="Sample 1"><figcaption>sample 1</figcaption></figure>
-        <figure><img src="images/a16_sample1.png" alt="Sample 2"><figcaption>sample 2</figcaption></figure>
-        <figure><img src="images/a16_sample2.png" alt="Sample 3"><figcaption>sample 3</figcaption></figure>
-        <figure><img src="images/a16_sample3.png" alt="Sample 4"><figcaption>sample 4</figcaption></figure>
-        <figure><img src="images/a16_sample4.png" alt="Sample 5"><figcaption>sample 5</figcaption></figure>
-    </div>
+    <figure style="margin-top: 16px;">
+        <img src="images/a16_samples.png" alt="5 samples, "a high quality photo"">
+        <figcaption>5 samples, "a high quality photo"</figcaption>
+    </figure>
 
     <h2>Part 2.1: Classifier-Free Guidance</h2>
 
@@ -213,147 +191,65 @@ def cfg_velocity(x, t, condition, w, predict_velocity, null_condition=''):
   return v_c + w * (v_c - v_u)
 </pre>
 
-    <div class="row">
-        <figure><img src="images/a21_cfg0.png" alt="CFG 1"><figcaption>sample 1, w = 7</figcaption></figure>
-        <figure><img src="images/a21_cfg1.png" alt="CFG 2"><figcaption>sample 2, w = 7</figcaption></figure>
-        <figure><img src="images/a21_cfg2.png" alt="CFG 3"><figcaption>sample 3, w = 7</figcaption></figure>
-        <figure><img src="images/a21_cfg3.png" alt="CFG 4"><figcaption>sample 4, w = 7</figcaption></figure>
-        <figure><img src="images/a21_cfg4.png" alt="CFG 5"><figcaption>sample 5, w = 7</figcaption></figure>
-    </div>
+    <figure style="margin-top: 16px;">
+        <img src="images/a21_cfg_samples.png" alt="5 CFG samples, w = 7, same noise as 1.6">
+        <figcaption>5 CFG samples, w = 7, same noise as 1.6</figcaption>
+    </figure>
 
     <h2>Part 3.1: Image-to-Image Editing</h2>
 
     <p>[TODO: how editing works and what changes as the starting time goes up]</p>
 
     <h3>Campanile</h3>
-    <div class="row">
-        <figure><img src="images/a31_campanile_orig.png" alt="Original"><figcaption>original</figcaption></figure>
-        <figure><img src="images/a31_campanile_002.png" alt="0.02"><figcaption>t = 0.02</figcaption></figure>
-        <figure><img src="images/a31_campanile_004.png" alt="0.04"><figcaption>t = 0.04</figcaption></figure>
-        <figure><img src="images/a31_campanile_006.png" alt="0.06"><figcaption>t = 0.06</figcaption></figure>
-    </div>
-    <div class="row">
-        <figure><img src="images/a31_campanile_010.png" alt="0.10"><figcaption>t = 0.10</figcaption></figure>
-        <figure><img src="images/a31_campanile_014.png" alt="0.14"><figcaption>t = 0.14</figcaption></figure>
-        <figure><img src="images/a31_campanile_025.png" alt="0.25"><figcaption>t = 0.25</figcaption></figure>
-        <figure><img src="images/a31_campanile_050.png" alt="0.50"><figcaption>t = 0.50</figcaption></figure>
-    </div>
-
-    <h3>[My image 1]</h3>
-    <div class="row">
-        <figure><img src="images/a31_mine1_orig.png" alt="Original"><figcaption>original</figcaption></figure>
-        <figure><img src="images/a31_mine1_002.png" alt="0.02"><figcaption>t = 0.02</figcaption></figure>
-        <figure><img src="images/a31_mine1_004.png" alt="0.04"><figcaption>t = 0.04</figcaption></figure>
-        <figure><img src="images/a31_mine1_006.png" alt="0.06"><figcaption>t = 0.06</figcaption></figure>
-    </div>
-    <div class="row">
-        <figure><img src="images/a31_mine1_010.png" alt="0.10"><figcaption>t = 0.10</figcaption></figure>
-        <figure><img src="images/a31_mine1_014.png" alt="0.14"><figcaption>t = 0.14</figcaption></figure>
-        <figure><img src="images/a31_mine1_025.png" alt="0.25"><figcaption>t = 0.25</figcaption></figure>
-        <figure><img src="images/a31_mine1_050.png" alt="0.50"><figcaption>t = 0.50</figcaption></figure>
-    </div>
-
-    <h3>[My image 2]</h3>
-    <div class="row">
-        <figure><img src="images/a31_mine2_orig.png" alt="Original"><figcaption>original</figcaption></figure>
-        <figure><img src="images/a31_mine2_002.png" alt="0.02"><figcaption>t = 0.02</figcaption></figure>
-        <figure><img src="images/a31_mine2_004.png" alt="0.04"><figcaption>t = 0.04</figcaption></figure>
-        <figure><img src="images/a31_mine2_006.png" alt="0.06"><figcaption>t = 0.06</figcaption></figure>
-    </div>
-    <div class="row">
-        <figure><img src="images/a31_mine2_010.png" alt="0.10"><figcaption>t = 0.10</figcaption></figure>
-        <figure><img src="images/a31_mine2_014.png" alt="0.14"><figcaption>t = 0.14</figcaption></figure>
-        <figure><img src="images/a31_mine2_025.png" alt="0.25"><figcaption>t = 0.25</figcaption></figure>
-        <figure><img src="images/a31_mine2_050.png" alt="0.50"><figcaption>t = 0.50</figcaption></figure>
-    </div>
-
+    <figure style="margin-top: 16px;">
+        <img src="images/a31_campanile.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
+        <figcaption>t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50</figcaption>
+    </figure>
+    <h3>My image 1 (parrot)</h3>
+    <figure style="margin-top: 16px;">
+        <img src="images/a31_mine1.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
+        <figcaption>t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50</figcaption>
+    </figure>
+    <h3>My image 2 (leopard)</h3>
+    <figure style="margin-top: 16px;">
+        <img src="images/a31_mine2.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
+        <figcaption>t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50</figcaption>
+    </figure>
     <h3>Web image</h3>
-    <div class="row">
-        <figure><img src="images/a31_web_orig.png" alt="Original"><figcaption>original</figcaption></figure>
-        <figure><img src="images/a31_web_002.png" alt="0.02"><figcaption>t = 0.02</figcaption></figure>
-        <figure><img src="images/a31_web_004.png" alt="0.04"><figcaption>t = 0.04</figcaption></figure>
-        <figure><img src="images/a31_web_006.png" alt="0.06"><figcaption>t = 0.06</figcaption></figure>
-    </div>
-    <div class="row">
-        <figure><img src="images/a31_web_010.png" alt="0.10"><figcaption>t = 0.10</figcaption></figure>
-        <figure><img src="images/a31_web_014.png" alt="0.14"><figcaption>t = 0.14</figcaption></figure>
-        <figure><img src="images/a31_web_025.png" alt="0.25"><figcaption>t = 0.25</figcaption></figure>
-        <figure><img src="images/a31_web_050.png" alt="0.50"><figcaption>t = 0.50</figcaption></figure>
-    </div>
-
+    <figure style="margin-top: 16px;">
+        <img src="images/a31_web.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
+        <figcaption>t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50</figcaption>
+    </figure>
     <h3>Hand drawing 1</h3>
-    <div class="row">
-        <figure><img src="images/a31_draw1_orig.png" alt="Original"><figcaption>original</figcaption></figure>
-        <figure><img src="images/a31_draw1_002.png" alt="0.02"><figcaption>t = 0.02</figcaption></figure>
-        <figure><img src="images/a31_draw1_004.png" alt="0.04"><figcaption>t = 0.04</figcaption></figure>
-        <figure><img src="images/a31_draw1_006.png" alt="0.06"><figcaption>t = 0.06</figcaption></figure>
-    </div>
-    <div class="row">
-        <figure><img src="images/a31_draw1_010.png" alt="0.10"><figcaption>t = 0.10</figcaption></figure>
-        <figure><img src="images/a31_draw1_014.png" alt="0.14"><figcaption>t = 0.14</figcaption></figure>
-        <figure><img src="images/a31_draw1_025.png" alt="0.25"><figcaption>t = 0.25</figcaption></figure>
-        <figure><img src="images/a31_draw1_050.png" alt="0.50"><figcaption>t = 0.50</figcaption></figure>
-    </div>
-
+    <figure style="margin-top: 16px;">
+        <img src="images/a31_draw1.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
+        <figcaption>t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50</figcaption>
+    </figure>
     <h3>Hand drawing 2</h3>
-    <div class="row">
-        <figure><img src="images/a31_draw2_orig.png" alt="Original"><figcaption>original</figcaption></figure>
-        <figure><img src="images/a31_draw2_002.png" alt="0.02"><figcaption>t = 0.02</figcaption></figure>
-        <figure><img src="images/a31_draw2_004.png" alt="0.04"><figcaption>t = 0.04</figcaption></figure>
-        <figure><img src="images/a31_draw2_006.png" alt="0.06"><figcaption>t = 0.06</figcaption></figure>
-    </div>
-    <div class="row">
-        <figure><img src="images/a31_draw2_010.png" alt="0.10"><figcaption>t = 0.10</figcaption></figure>
-        <figure><img src="images/a31_draw2_014.png" alt="0.14"><figcaption>t = 0.14</figcaption></figure>
-        <figure><img src="images/a31_draw2_025.png" alt="0.25"><figcaption>t = 0.25</figcaption></figure>
-        <figure><img src="images/a31_draw2_050.png" alt="0.50"><figcaption>t = 0.50</figcaption></figure>
-    </div>
+    <figure style="margin-top: 16px;">
+        <img src="images/a31_draw2.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
+        <figcaption>t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50</figcaption>
+    </figure>
 
     <h2>Part 3.2: Text-Guided Image Editing</h2>
 
     <p>[TODO: how the prompt steers the edit, and where the edit and original blend best]</p>
 
     <h3>Campanile: "yellow mustard sauce bottle on a table"</h3>
-    <div class="row">
-        <figure><img src="images/a32_campanile_orig.png" alt="Original"><figcaption>original</figcaption></figure>
-        <figure><img src="images/a32_campanile_002.png" alt="0.02"><figcaption>t = 0.02</figcaption></figure>
-        <figure><img src="images/a32_campanile_004.png" alt="0.04"><figcaption>t = 0.04</figcaption></figure>
-        <figure><img src="images/a32_campanile_006.png" alt="0.06"><figcaption>t = 0.06</figcaption></figure>
-    </div>
-    <div class="row">
-        <figure><img src="images/a32_campanile_010.png" alt="0.10"><figcaption>t = 0.10</figcaption></figure>
-        <figure><img src="images/a32_campanile_014.png" alt="0.14"><figcaption>t = 0.14</figcaption></figure>
-        <figure><img src="images/a32_campanile_025.png" alt="0.25"><figcaption>t = 0.25</figcaption></figure>
-        <figure><img src="images/a32_campanile_050.png" alt="0.50"><figcaption>t = 0.50</figcaption></figure>
-    </div>
-
-    <h3>[My image 1]: "green turtle in the mud"</h3>
-    <div class="row">
-        <figure><img src="images/a32_mine1_orig.png" alt="Original"><figcaption>original</figcaption></figure>
-        <figure><img src="images/a32_mine1_002.png" alt="0.02"><figcaption>t = 0.02</figcaption></figure>
-        <figure><img src="images/a32_mine1_004.png" alt="0.04"><figcaption>t = 0.04</figcaption></figure>
-        <figure><img src="images/a32_mine1_006.png" alt="0.06"><figcaption>t = 0.06</figcaption></figure>
-    </div>
-    <div class="row">
-        <figure><img src="images/a32_mine1_010.png" alt="0.10"><figcaption>t = 0.10</figcaption></figure>
-        <figure><img src="images/a32_mine1_014.png" alt="0.14"><figcaption>t = 0.14</figcaption></figure>
-        <figure><img src="images/a32_mine1_025.png" alt="0.25"><figcaption>t = 0.25</figcaption></figure>
-        <figure><img src="images/a32_mine1_050.png" alt="0.50"><figcaption>t = 0.50</figcaption></figure>
-    </div>
-
-    <h3>[My image 2]: "yellow dog happy"</h3>
-    <div class="row">
-        <figure><img src="images/a32_mine2_orig.png" alt="Original"><figcaption>original</figcaption></figure>
-        <figure><img src="images/a32_mine2_002.png" alt="0.02"><figcaption>t = 0.02</figcaption></figure>
-        <figure><img src="images/a32_mine2_004.png" alt="0.04"><figcaption>t = 0.04</figcaption></figure>
-        <figure><img src="images/a32_mine2_006.png" alt="0.06"><figcaption>t = 0.06</figcaption></figure>
-    </div>
-    <div class="row">
-        <figure><img src="images/a32_mine2_010.png" alt="0.10"><figcaption>t = 0.10</figcaption></figure>
-        <figure><img src="images/a32_mine2_014.png" alt="0.14"><figcaption>t = 0.14</figcaption></figure>
-        <figure><img src="images/a32_mine2_025.png" alt="0.25"><figcaption>t = 0.25</figcaption></figure>
-        <figure><img src="images/a32_mine2_050.png" alt="0.50"><figcaption>t = 0.50</figcaption></figure>
-    </div>
+    <figure style="margin-top: 16px;">
+        <img src="images/a32_campanile.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
+        <figcaption>t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50</figcaption>
+    </figure>
+    <h3>My image 1: "green turtle in the mud"</h3>
+    <figure style="margin-top: 16px;">
+        <img src="images/a32_mine1.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
+        <figcaption>t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50</figcaption>
+    </figure>
+    <h3>My image 2: "yellow dog happy"</h3>
+    <figure style="margin-top: 16px;">
+        <img src="images/a32_mine2.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
+        <figcaption>t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50</figcaption>
+    </figure>
 
     <h2>Part 3.3: Visual Anagrams</h2>
 
@@ -370,16 +266,15 @@ def visual_anagrams(noise, condition_a, condition_b, predict_velocity, w=7, step
 </pre>
 
     <h3>Illusion 1</h3>
-    <div class="row">
-        <figure><img src="images/a33_anagram1_up.png" alt="Upright"><figcaption>upright: "an oil painting of an old man"</figcaption></figure>
-        <figure><img src="images/a33_anagram1_flip.png" alt="Flipped"><figcaption>flipped: "an oil painting of people around a campfire"</figcaption></figure>
-    </div>
-
+    <figure style="margin-top: 16px;">
+        <img src="images/a33_anagram1.png" alt="upright: "an ink drawing of a jellyfish" / flipped: "an ink drawing of a coral reef"">
+        <figcaption>upright: "an ink drawing of a jellyfish" / flipped: "an ink drawing of a coral reef"</figcaption>
+    </figure>
     <h3>Illusion 2</h3>
-    <div class="row">
-        <figure><img src="images/a33_anagram2_up.png" alt="Upright"><figcaption>upright: "a lithograph of a snowy mountain village"</figcaption></figure>
-        <figure><img src="images/a33_anagram2_flip.png" alt="Flipped"><figcaption>flipped: "a lithograph of a horse"</figcaption></figure>
-    </div>
+    <figure style="margin-top: 16px;">
+        <img src="images/a33_anagram2.png" alt="upright: "a lithograph of a river delta" / flipped: "a lithograph of a canyon"">
+        <figcaption>upright: "a lithograph of a river delta" / flipped: "a lithograph of a canyon"</figcaption>
+    </figure>
 
     <h2>Part 3.4: Hybrid Images</h2>
 
@@ -397,14 +292,14 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
 
     <h3>Hybrid 1</h3>
     <div class="row">
-        <figure><img src="images/a34_hybrid1.png" alt="Hybrid 1"><figcaption>near: "[prompt]" / far: "[prompt]"</figcaption></figure>
-        <figure style="max-width: 120px;"><img src="images/a34_hybrid1.png" alt="Hybrid 1 small"><figcaption>small (far view)</figcaption></figure>
+        <figure><img src="images/a34_hybrid1.png" alt="Hybrid 1"><figcaption>close: "a lithograph of a orange bird"</figcaption></figure>
+        <figure style="max-width: 120px;"><img src="images/a34_hybrid1_small.png" alt="Hybrid 1 small"><figcaption>distant: "a lithograph of a yellow submarine"</figcaption></figure>
     </div>
 
     <h3>Hybrid 2</h3>
     <div class="row">
-        <figure><img src="images/a34_hybrid2.png" alt="Hybrid 2"><figcaption>near: "[prompt]" / far: "[prompt]"</figcaption></figure>
-        <figure style="max-width: 120px;"><img src="images/a34_hybrid2.png" alt="Hybrid 2 small"><figcaption>small (far view)</figcaption></figure>
+        <figure><img src="images/a34_hybrid2.png" alt="Hybrid 2"><figcaption>close: "a lithograph of a chair"</figcaption></figure>
+        <figure style="max-width: 120px;"><img src="images/a34_hybrid2_small.png" alt="Hybrid 2 small"><figcaption>distant: "a lithograph of a giraffe"</figcaption></figure>
     </div>
 
     <!-- ===================================================== -->
@@ -434,13 +329,13 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
     <p>[TODO: training setup: sigma = 0.5, D = 128, batch 256, Adam lr 1e-4, 5 epochs]</p>
 
     <figure style="margin-top: 16px;">
-        <img src="images/b121_loss.png" alt="Training loss">
+        <img src="images/denoise_loss.png" alt="Training loss">
         <figcaption>training loss</figcaption>
     </figure>
 
     <div class="row">
-        <figure><img src="images/b121_epoch1.png" alt="Epoch 1"><figcaption>test results after epoch 1</figcaption></figure>
-        <figure><img src="images/b121_epoch5.png" alt="Epoch 5"><figcaption>test results after epoch 5</figcaption></figure>
+        <figure><img src="images/denoise_1.png" alt="Epoch 1"><figcaption>test results after epoch 1</figcaption></figure>
+        <figure><img src="images/denoise_5.png" alt="Epoch 5"><figcaption>test results after epoch 5</figcaption></figure>
     </div>
 
     <h2>Part 1.2.2: Out-of-Distribution Testing</h2>
@@ -460,7 +355,7 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
     <h2>Part 1.2.3: Denoising Pure Noise</h2>
 
     <figure style="margin-top: 16px;">
-        <img src="images/b123_loss.png" alt="Training loss">
+        <img src="images/pure_noise_loss.png" alt="Training loss">
         <figcaption>training loss (pure noise input)</figcaption>
     </figure>
 
@@ -480,16 +375,16 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
     <p>[TODO: setup: D = 64, batch 64, Adam lr 1e-2, exponential scheduler, 10 epochs]</p>
 
     <figure style="margin-top: 16px;">
-        <img src="images/b22_loss.png" alt="Training loss">
+        <img src="images/time_conditioned_loss.png" alt="Training loss">
         <figcaption>training loss</figcaption>
     </figure>
 
     <h2>Part 2.3: Sampling from the Time-Conditioned UNet</h2>
 
     <div class="row">
-        <figure><img src="images/time_samples_epoch1.png" alt="Epoch 1"><figcaption>epoch 1</figcaption></figure>
-        <figure><img src="images/time_samples_epoch5.png" alt="Epoch 5"><figcaption>epoch 5</figcaption></figure>
-        <figure><img src="images/time_samples_epoch10.png" alt="Epoch 10"><figcaption>epoch 10</figcaption></figure>
+        <figure><img src="images/time_condition_1.png" alt="Epoch 1"><figcaption>epoch 1</figcaption></figure>
+        <figure><img src="images/time_condition_5.png" alt="Epoch 5"><figcaption>epoch 5</figcaption></figure>
+        <figure><img src="images/time_condition_10.png" alt="Epoch 10"><figcaption>epoch 10</figcaption></figure>
     </div>
 
     <p>[TODO: how the samples improve over training]</p>
@@ -501,8 +396,13 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
     <h2>Part 2.5: Training the Class-Conditioned UNet</h2>
 
     <figure style="margin-top: 16px;">
-        <img src="images/b25_loss.png" alt="Training loss">
-        <figcaption>training loss</figcaption>
+        <img src="images/class_conditioned_loss.png" alt="Training loss">
+        <figcaption>training loss (with scheduler)</figcaption>
+    </figure>
+
+    <figure style="margin-top: 16px;">
+        <img src="images/class_no_scheduler_loss.png" alt="Training loss, no scheduler">
+        <figcaption>training loss (no scheduler, constant lr = 5.5e-3)</figcaption>
     </figure>
 
     <h2>Part 2.6: Sampling from the Class-Conditioned UNet</h2>
@@ -510,9 +410,9 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
     <p>[TODO: CFG with guidance scale 5, 4 of each digit]</p>
 
     <div class="row">
-        <figure><img src="images/class_1.png" alt="Epoch 1"><figcaption>epoch 1</figcaption></figure>
-        <figure><img src="images/class_5.png" alt="Epoch 5"><figcaption>epoch 5</figcaption></figure>
-        <figure><img src="images/class_10.png" alt="Epoch 10"><figcaption>epoch 10</figcaption></figure>
+        <figure><img src="images/class_condition1.png" alt="Epoch 1"><figcaption>epoch 1</figcaption></figure>
+        <figure><img src="images/class_condition5.png" alt="Epoch 5"><figcaption>epoch 5</figcaption></figure>
+        <figure><img src="images/class_condition10.png" alt="Epoch 10"><figcaption>epoch 10</figcaption></figure>
     </div>
 
     <h3>Without the learning rate scheduler</h3>
@@ -522,7 +422,7 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
         <figure><img src="images/no_schedule_10.png" alt="Epoch 10"><figcaption>epoch 10</figcaption></figure>
     </div>
 
-    <p>[TODO: what you did to make up for removing the scheduler (constant lr = 3e-3) and how the results compare]</p>
+    <p>[TODO: what you did to make up for removing the scheduler (constant lr = 5.5e-3) and how the results compare]</p>
 
     <h2>What I learned</h2>
 
