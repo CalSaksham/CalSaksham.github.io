@@ -67,7 +67,7 @@
 
     <h2>Part 1.1: Constructing Noisy Training Inputs</h2>
 
-    <p>[TODO: how interpolate works, which image you picked, and what changes as t goes up]</p>
+    <p>I used a parrot photo and mixed it with noise using t. At a small t, the image is mostly noise. At t = 0.25 I can barely make out the beak, but by 0.75 it is clearly a parrot. The parrot’s colors and details get weaker as more noise is mixed in.</p>
 
 <pre>
 def interpolate(image, noise, t):
@@ -81,7 +81,7 @@ def interpolate(image, noise, t):
 
     <h2>Part 1.2: Classical Denoising</h2>
 
-    <p>[TODO: the blur sigmas you picked for each t and how well blurring worked]</p>
+    <p>I tried Gaussian blur to get rid of the noise. At t = 0.25, σ = 8 removes most of the grain, but it turns the parrot into colored blobs. I lose the eye and feather details. A smaller blur leaves noise behind, while a bigger one smears the whole image.</p>
 
     <figure style="margin-top: 16px;">
         <img src="a12_blur_t025.png" alt="noisy vs Gaussian blur, t = 0.25">
@@ -98,7 +98,7 @@ def interpolate(image, noise, t):
 
     <h2>Part 1.3: One-Step Denoising</h2>
 
-    <p>[TODO: how one-step denoising works and how it compares to blurring]</p>
+    <p>I took the noisy image and used the model’s predicted velocity to make one big step toward a clean image. At t = 0.25, this looks much better than blur. The beak and eye are sharp again, but the feathers are flat and the chest colors look guessed. It looks like a real parrot, just not exactly my parrot.]</p>
 
 <pre>
 def one_step_denoise(x, t, condition, predict_velocity):
@@ -120,7 +120,7 @@ def one_step_denoise(x, t, condition, predict_velocity):
 
     <h2>Part 1.4: Visualizing Velocity</h2>
 
-    <p>[TODO: what the predicted vs ground-truth updates show and where the error is biggest]</p>
+    <p>I compared the model’s predicted update with the update I know from the original image. The prediction looks like a smoother, blurrier version. The error is strongest around the feather edges, beak, and eye, while the plain background has almost no error. I think the model understands the big shapes, but misses the small texture.</p>
 
     <figure style="max-width: 300px; margin: 16px 0;">
         <img src="a11_original.png" alt="original">
@@ -141,7 +141,7 @@ def one_step_denoise(x, t, condition, predict_velocity):
 
     <h2>Part 1.5: Iterative Denoising with Euler Sampling</h2>
 
-    <p>[TODO: how euler_sample works, the shortened last step, and how it compares to one-step and blur]</p>
+    <p>My first Euler sampler had a bug in the leftover step, and floating point rounding made that step harder to handle. I fixed it so the sampler takes small steps and then a shorter final step to reach t = 1. In the comparison, Euler looks closest to the original parrot. More feather texture comes back than in the one-step result, and blur is clearly the worst.</p>
 
 <pre>
 def euler_sample(x_start, t_start, step_size, velocity):
@@ -171,7 +171,7 @@ def euler_sample(x_start, t_start, step_size, velocity):
 
     <h2>Part 1.6: Generating Images from Noise</h2>
 
-    <p>[TODO: what kinds of images the generic prompt gave you]</p>
+    <p>I used the prompt “a high quality photo” and got five portraits of people, even though I never asked for a person. The results were not really high quality either. Seed 180 has almost no face, and seed 183 looks distorted. The model seems to have a strong idea of what this vague prompt means, but it does not always make it well.</p>
 
     <figure style="margin-top: 16px;">
         <img src="a16_samples.png" alt="5 samples, "a high quality photo"">
@@ -180,7 +180,7 @@ def euler_sample(x_start, t_start, step_size, velocity):
 
     <h2>Part 2.1: Classifier-Free Guidance</h2>
 
-    <p>[TODO: how CFG works and how these compare to the 1.6 samples (same noise)]</p>
+    <p>I used classifier-free guidance with w = 7 and kept the same starting noise as before. It pushes the model harder toward the prompt by comparing the prompted prediction with an unprompted one. This time the faces are clean, centered, and well lit, with no broken faces. But they also look very similar: same kind of pose and plain background. I got better quality, but less variety.</p>
 
 <pre>
 def cfg_velocity(x, t, condition, w, predict_velocity, null_condition=&#x27;&#x27;):
@@ -195,7 +195,7 @@ def cfg_velocity(x, t, condition, w, predict_velocity, null_condition=&#x27;&#x2
 
     <h2>Part 3.1: Image-to-Image Editing</h2>
 
-    <p>[TODO: how editing works and what changes as the starting time goes up]</p>
+    <p>I added noise to my monkey drawing at different starting times, then let the model edit it. At t = 0.02 to 0.06, the monkey disappears and I get a white mug or a sheet of paper. Only the white and gray colors seem to survive. At 0.10 to 0.14 it looks like crumpled cloth. Around 0.25 the monkey comes back as a cleaner sketch, and at 0.5 it stays very close to my drawing. It seems to need about t = 0.25 before it really sees the monkey.</p>
 
 <pre>
 def edit(image, noise, t_start, condition, predict_velocity, w=7, step_size=0.02):
@@ -242,7 +242,7 @@ def edit(image, noise, t_start, condition, predict_velocity, w=7, step_size=0.02
 
     <h2>Part 3.2: Text-Guided Image Editing</h2>
 
-    <p>[TODO: how the prompt steers the edit, and where the edit and original blend best]</p>
+    <p>I changed the prompt to see how much of the original image would survive. For the parrot-to-turtle edit, t = 0.02 gives me a turtle in mud with basically no parrot left. At 0.04 to 0.06 it turns into a strange cartoon turtle. Around 0.10 to 0.14 is my favorite, because the turtle keeps some of the parrot’s colors and pose. By 0.5 it is mostly the parrot again. The Campanile-to-mustard-bottle edit had a similar sweet spot, around 0.06 to 0.14.</p>
 
     <h3>Campanile: "yellow mustard sauce bottle on a table"</h3>
     <figure style="margin-top: 16px;">
@@ -262,7 +262,7 @@ def edit(image, noise, t_start, condition, predict_velocity, w=7, step_size=0.02
 
     <h2>Part 3.3: Visual Anagrams</h2>
 
-    <p>[TODO: how the two velocities are combined each step, and anything you ran into]</p>
+    <p>For each step, I predicted an update for the upright prompt and another for the flipped prompt. I rotated the second update back and averaged them. My first tree and green-fire tries did not work. The tree took over, and flipping it just showed an upside-down tree. I think “green fire” was too unusual for the model to make a strong second image. I switched to shapes that could bend into each other more easily: a jellyfish and coral reef, then a river delta and canyon. I also kept the style and colors similar in each pair.</p>
 
 <pre>
 def visual_anagrams(noise, condition_a, condition_b, predict_velocity, w=7, step_size=0.02):
@@ -289,7 +289,7 @@ def visual_anagrams(noise, condition_a, condition_b, predict_velocity, w=7, step
 
     <h2>Part 3.4: Hybrid Images</h2>
 
-    <p>[TODO: low frequencies from one prompt, high from the other, and what you see near vs far]</p>
+    <p>I mixed the broad shapes from one prompt with the fine details from another. Up close, the first image looks like a yellow bird, especially the eye, feathers, and little legs. At 64 pixels it becomes more of a simple yellow shape that can suggest a submarine, though I still see the bird. The second image is clearly a chair up close. When it is small, its tall shape can hint at a giraffe, but this one still reads mostly as a chair to me. The change with distance is weaker than I expected.</p>
 
 <pre>
 def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_size=0.02):
@@ -323,7 +323,7 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
 
     <h2>Part 1.1: Implementing the UNet</h2>
 
-    <p>[TODO: short description of the UNet blocks and how they fit together]</p>
+    <p>I built a UNet to take a noisy digit and predict a cleaner one. The downsampling blocks shrink the image so the model can look at the whole digit, and the upsampling blocks bring it back to its original size. The skip connections carry over details from the earlier blocks, so the output does not have to rebuild everything from the smallest version.</p>
 
     <h2>Part 1.2: Noising Process</h2>
 
@@ -339,7 +339,7 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
 
     <h2>Part 1.2.1: Training the Denoiser</h2>
 
-    <p>[TODO: training setup: sigma = 0.5, D = 128, batch 256, Adam lr 1e-4, 5 epochs]</p>
+    <p>I trained the denoiser at σ = 0.5 with D = 128, batch size 256, Adam, and a learning rate of 1e-4 for 5 epochs. My loss plot first showed only 2 points, then 5, because I had the append in the wrong place. After fixing it, I could see the loss drop quickly from about 0.07 to 0.01 and then flatten out. The cleaned digits are readable, but still a little blurry. Thin strokes on digits like 4 and 5 have small smudges.</p>
 
     <figure style="margin-top: 16px;">
         <img src="denoise_loss.png" alt="Training loss">
@@ -353,7 +353,7 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
 
     <h2>Part 1.2.2: Out-of-Distribution Testing</h2>
 
-    <p>[TODO: how the denoiser handles noise levels it wasn't trained on]</p>
+    <p>I tested the denoiser on noise levels it had not trained on. It handles values below σ = 0.5 pretty well. At σ = 1.0, I can still read the 7, but it looks blotchy and has specks left over. That makes sense since the model only learned to clean images at σ = 0.5.</p>
 
     <div class="row">
         <figure><img src="b122_s000.png" alt="0.0"><figcaption>sigma = 0.0</figcaption></figure>
@@ -377,15 +377,15 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
         <figure><img src="pure_noise_epoch5.png" alt="Epoch 5"><figcaption>after epoch 5</figcaption></figure>
     </div>
 
-    <p>[TODO: what pattern you see, how it relates to the training digits, and why (the MSE / centroid idea)]</p>
+    <p>When I gave the model pure noise, every output looked like the same blurry blob. There is no digit left in the input for it to recover. Since I trained with mean squared error, its safest guess is something like the average of all the training digits. So it makes a vague digit-shaped patch instead of inventing a clear number.</p>
 
     <h2>Part 2.1: Adding Time Conditioning</h2>
 
-    <p>[TODO: how t is injected with the two FCBlocks]</p>
+    <p>I added time conditioning so the UNet knows how noisy the image is at each step. I passed t through two FCBlocks and used their outputs inside the network. That way it does not have to make the same kind of update at every point in the sampling process.</p>
 
     <h2>Part 2.2: Training the Time-Conditioned UNet</h2>
 
-    <p>[TODO: setup: D = 64, batch 64, Adam lr 1e-2, exponential scheduler, 10 epochs]</p>
+    <p>I trained the time-conditioned model with D = 64, batch size 64, Adam, and a starting learning rate of 1e-2. I used an exponential scheduler to lower the learning rate over 10 epochs. The loss falls fast at the start and then changes much less, which matches how the samples improve.</p>
 
     <figure style="margin-top: 16px;">
         <img src="time_conditioned_loss.png" alt="Training loss">
@@ -400,11 +400,11 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
         <figure><img src="time_condition_10.png" alt="Epoch 10"><figcaption>epoch 10</figcaption></figure>
     </div>
 
-    <p>[TODO: how the samples improve over training]</p>
+    <p>At epoch 1, my samples are mostly squiggles and I cannot really call them digits. By epoch 10, most of them are readable. Some are still odd, especially a few half-formed 4s and 8s, but it is a big change from the first epoch.</p>
 
     <h2>Part 2.4: Adding Class Conditioning</h2>
 
-    <p>[TODO: one-hot class vector, the two extra FCBlocks, and the 10% dropout]</p>
+    <p>I added a one-hot vector to tell the model which digit to make. Two more FCBlocks put that class information into the UNet. I also dropped the class input 10% of the time during training, so the model learns both a conditioned and an unconditioned prediction. I need both of those for classifier-free guidance when sampling.</p>
 
     <h2>Part 2.5: Training the Class-Conditioned UNet</h2>
 
@@ -420,7 +420,7 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
 
     <h2>Part 2.6: Sampling from the Class-Conditioned UNet</h2>
 
-    <p>[TODO: CFG with guidance scale 5, 4 of each digit]</p>
+    <p>I sampled with a guidance scale of 5 and made four examples of each digit from 0 to 9. By epoch 10, the rows are clean and I can tell which digit each column is supposed to be. Some digits have different handwriting, but the class mostly stays correct.</p>
 
     <div class="row">
         <figure><img src="class_condition1.png" alt="Epoch 1"><figcaption>epoch 1</figcaption></figure>
@@ -435,11 +435,11 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
         <figure><img src="no_schedule_10.png" alt="Epoch 10"><figcaption>epoch 10</figcaption></figure>
     </div>
 
-    <p>[TODO: what you did to make up for removing the scheduler (constant lr = 5.5e-3) and how the results compare]</p>
+    <p>I removed the scheduler and used a constant learning rate of 5.5e-3, between the original high and low rates. I expected the results to look more unstable, but after 10 epochs they look almost the same. The loss drops quickly in both runs, and both give readable rows of digits. For this short run, I cannot see a big benefit from the scheduler just by looking at the final images.</p>
 
     <h2>What I learned</h2>
 
-    <p>[TODO]</p>
+    <p>The biggest thing I noticed is that a model can make an image look convincing without actually recovering the original details. My one-step parrot looked good, but some feathers and colors were made up. Taking more Euler steps helped, while blur just erased details. I also saw the tradeoff with guidance: it fixed the faces, but made the results more alike. In Part B, the pure-noise test helped me understand why a model trained with squared error makes an average-looking blob when the input gives it no clue. And the learning rate experiment surprised me, because the simpler constant rate worked almost as well in the time I trained it.</p>
 
 </body>
 </html>
