@@ -75,7 +75,7 @@ def interpolate(image, noise, t):
 </pre>
 
     <figure style="margin-top: 16px;">
-        <img src="images/a11_training_inputs.png" alt="original and noisy versions at t = 0.25, 0.50, 0.75">
+        <img src="a11_training_inputs.png" alt="original and noisy versions at t = 0.25, 0.50, 0.75">
         <figcaption>original and noisy versions at t = 0.25, 0.50, 0.75</figcaption>
     </figure>
 
@@ -84,15 +84,15 @@ def interpolate(image, noise, t):
     <p>[TODO: the blur sigmas you picked for each t and how well blurring worked]</p>
 
     <figure style="margin-top: 16px;">
-        <img src="images/a12_blur_t025.png" alt="noisy vs Gaussian blur, t = 0.25">
+        <img src="a12_blur_t025.png" alt="noisy vs Gaussian blur, t = 0.25">
         <figcaption>noisy vs Gaussian blur, t = 0.25</figcaption>
     </figure>
     <figure style="margin-top: 16px;">
-        <img src="images/a12_blur_t050.png" alt="noisy vs Gaussian blur, t = 0.50">
+        <img src="a12_blur_t050.png" alt="noisy vs Gaussian blur, t = 0.50">
         <figcaption>noisy vs Gaussian blur, t = 0.50</figcaption>
     </figure>
     <figure style="margin-top: 16px;">
-        <img src="images/a12_blur_t075.png" alt="noisy vs Gaussian blur, t = 0.75">
+        <img src="a12_blur_t075.png" alt="noisy vs Gaussian blur, t = 0.75">
         <figcaption>noisy vs Gaussian blur, t = 0.75</figcaption>
     </figure>
 
@@ -106,15 +106,15 @@ def one_step_denoise(x, t, condition, predict_velocity):
 </pre>
 
     <figure style="margin-top: 16px;">
-        <img src="images/a13_onestep_t025.png" alt="original, noisy, one-step estimate, t = 0.25">
+        <img src="a13_onestep_t025.png" alt="original, noisy, one-step estimate, t = 0.25">
         <figcaption>original, noisy, one-step estimate, t = 0.25</figcaption>
     </figure>
     <figure style="margin-top: 16px;">
-        <img src="images/a13_onestep_t050.png" alt="original, noisy, one-step estimate, t = 0.50">
+        <img src="a13_onestep_t050.png" alt="original, noisy, one-step estimate, t = 0.50">
         <figcaption>original, noisy, one-step estimate, t = 0.50</figcaption>
     </figure>
     <figure style="margin-top: 16px;">
-        <img src="images/a13_onestep_t075.png" alt="original, noisy, one-step estimate, t = 0.75">
+        <img src="a13_onestep_t075.png" alt="original, noisy, one-step estimate, t = 0.75">
         <figcaption>original, noisy, one-step estimate, t = 0.75</figcaption>
     </figure>
 
@@ -123,19 +123,19 @@ def one_step_denoise(x, t, condition, predict_velocity):
     <p>[TODO: what the predicted vs ground-truth updates show and where the error is biggest]</p>
 
     <figure style="max-width: 300px; margin: 16px 0;">
-        <img src="images/a11_original.png" alt="original">
+        <img src="a11_original.png" alt="original">
         <figcaption>original</figcaption>
     </figure>
     <figure style="margin-top: 16px;">
-        <img src="images/a14_velocity_t025.png" alt="noisy image, predicted update, ground-truth update, error, t = 0.25">
+        <img src="a14_velocity_t025.png" alt="noisy image, predicted update, ground-truth update, error, t = 0.25">
         <figcaption>noisy image, predicted update, ground-truth update, error, t = 0.25</figcaption>
     </figure>
     <figure style="margin-top: 16px;">
-        <img src="images/a14_velocity_t050.png" alt="noisy image, predicted update, ground-truth update, error, t = 0.50">
+        <img src="a14_velocity_t050.png" alt="noisy image, predicted update, ground-truth update, error, t = 0.50">
         <figcaption>noisy image, predicted update, ground-truth update, error, t = 0.50</figcaption>
     </figure>
     <figure style="margin-top: 16px;">
-        <img src="images/a14_velocity_t075.png" alt="noisy image, predicted update, ground-truth update, error, t = 0.75">
+        <img src="a14_velocity_t075.png" alt="noisy image, predicted update, ground-truth update, error, t = 0.75">
         <figcaption>noisy image, predicted update, ground-truth update, error, t = 0.75</figcaption>
     </figure>
 
@@ -162,12 +162,12 @@ def euler_sample(x_start, t_start, step_size, velocity):
 
     <h3>Trajectory</h3>
     <figure style="margin-top: 16px;">
-        <img src="images/a15_trajectory.png" alt="Euler trajectory starting from t = 0.50">
+        <img src="a15_trajectory.png" alt="Euler trajectory starting from t = 0.50">
         <figcaption>Euler trajectory starting from t = 0.50</figcaption>
     </figure>
     <h3>Comparison</h3>
     <figure style="margin-top: 16px;">
-        <img src="images/a15_comparison.png" alt="original, Gaussian blur, one-step, Euler">
+        <img src="a15_comparison.png" alt="original, Gaussian blur, one-step, Euler">
         <figcaption>original, Gaussian blur, one-step, Euler</figcaption>
     </figure>
 
@@ -176,7 +176,7 @@ def euler_sample(x_start, t_start, step_size, velocity):
     <p>[TODO: what kinds of images the generic prompt gave you]</p>
 
     <figure style="margin-top: 16px;">
-        <img src="images/a16_samples.png" alt="5 samples, "a high quality photo"">
+        <img src="a16_samples.png" alt="5 samples, "a high quality photo"">
         <figcaption>5 samples, "a high quality photo"</figcaption>
     </figure>
 
@@ -192,7 +192,7 @@ def cfg_velocity(x, t, condition, w, predict_velocity, null_condition=''):
 </pre>
 
     <figure style="margin-top: 16px;">
-        <img src="images/a21_cfg_samples.png" alt="5 CFG samples, w = 7, same noise as 1.6">
+        <img src="a21_cfg_samples.png" alt="5 CFG samples, w = 7, same noise as 1.6">
         <figcaption>5 CFG samples, w = 7, same noise as 1.6</figcaption>
     </figure>
 
@@ -202,32 +202,32 @@ def cfg_velocity(x, t, condition, w, predict_velocity, null_condition=''):
 
     <h3>Campanile</h3>
     <figure style="margin-top: 16px;">
-        <img src="images/a31_campanile.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
+        <img src="a31_campanile.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
         <figcaption>t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50</figcaption>
     </figure>
     <h3>My image 1 (parrot)</h3>
     <figure style="margin-top: 16px;">
-        <img src="images/a31_mine1.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
+        <img src="a31_mine1.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
         <figcaption>t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50</figcaption>
     </figure>
     <h3>My image 2 (leopard)</h3>
     <figure style="margin-top: 16px;">
-        <img src="images/a31_mine2.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
+        <img src="a31_mine2.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
         <figcaption>t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50</figcaption>
     </figure>
     <h3>Web image</h3>
     <figure style="margin-top: 16px;">
-        <img src="images/a31_web.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
+        <img src="a31_web.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
         <figcaption>t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50</figcaption>
     </figure>
     <h3>Hand drawing 1</h3>
     <figure style="margin-top: 16px;">
-        <img src="images/a31_draw1.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
+        <img src="a31_draw1.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
         <figcaption>t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50</figcaption>
     </figure>
     <h3>Hand drawing 2</h3>
     <figure style="margin-top: 16px;">
-        <img src="images/a31_draw2.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
+        <img src="a31_draw2.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
         <figcaption>t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50</figcaption>
     </figure>
 
@@ -237,17 +237,17 @@ def cfg_velocity(x, t, condition, w, predict_velocity, null_condition=''):
 
     <h3>Campanile: "yellow mustard sauce bottle on a table"</h3>
     <figure style="margin-top: 16px;">
-        <img src="images/a32_campanile.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
+        <img src="a32_campanile.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
         <figcaption>t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50</figcaption>
     </figure>
     <h3>My image 1: "green turtle in the mud"</h3>
     <figure style="margin-top: 16px;">
-        <img src="images/a32_mine1.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
+        <img src="a32_mine1.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
         <figcaption>t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50</figcaption>
     </figure>
     <h3>My image 2: "yellow dog happy"</h3>
     <figure style="margin-top: 16px;">
-        <img src="images/a32_mine2.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
+        <img src="a32_mine2.png" alt="t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50">
         <figcaption>t = 0.02, 0.04, 0.06, 0.10, 0.14, 0.25, 0.50</figcaption>
     </figure>
 
@@ -267,12 +267,12 @@ def visual_anagrams(noise, condition_a, condition_b, predict_velocity, w=7, step
 
     <h3>Illusion 1</h3>
     <figure style="margin-top: 16px;">
-        <img src="images/a33_anagram1.png" alt="upright: "an ink drawing of a jellyfish" / flipped: "an ink drawing of a coral reef"">
+        <img src="a33_anagram1.png" alt="upright: "an ink drawing of a jellyfish" / flipped: "an ink drawing of a coral reef"">
         <figcaption>upright: "an ink drawing of a jellyfish" / flipped: "an ink drawing of a coral reef"</figcaption>
     </figure>
     <h3>Illusion 2</h3>
     <figure style="margin-top: 16px;">
-        <img src="images/a33_anagram2.png" alt="upright: "a lithograph of a river delta" / flipped: "a lithograph of a canyon"">
+        <img src="a33_anagram2.png" alt="upright: "a lithograph of a river delta" / flipped: "a lithograph of a canyon"">
         <figcaption>upright: "a lithograph of a river delta" / flipped: "a lithograph of a canyon"</figcaption>
     </figure>
 
@@ -292,14 +292,14 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
 
     <h3>Hybrid 1</h3>
     <div class="row">
-        <figure><img src="images/a34_hybrid1.png" alt="Hybrid 1"><figcaption>close: "a lithograph of a orange bird"</figcaption></figure>
-        <figure style="max-width: 120px;"><img src="images/a34_hybrid1_small.png" alt="Hybrid 1 small"><figcaption>distant: "a lithograph of a yellow submarine"</figcaption></figure>
+        <figure><img src="a34_hybrid1.png" alt="Hybrid 1"><figcaption>close: "a lithograph of a orange bird"</figcaption></figure>
+        <figure style="max-width: 120px;"><img src="a34_hybrid1_small.png" alt="Hybrid 1 small"><figcaption>distant: "a lithograph of a yellow submarine"</figcaption></figure>
     </div>
 
     <h3>Hybrid 2</h3>
     <div class="row">
-        <figure><img src="images/a34_hybrid2.png" alt="Hybrid 2"><figcaption>close: "a lithograph of a chair"</figcaption></figure>
-        <figure style="max-width: 120px;"><img src="images/a34_hybrid2_small.png" alt="Hybrid 2 small"><figcaption>distant: "a lithograph of a giraffe"</figcaption></figure>
+        <figure><img src="a34_hybrid2.png" alt="Hybrid 2"><figcaption>close: "a lithograph of a chair"</figcaption></figure>
+        <figure style="max-width: 120px;"><img src="a34_hybrid2_small.png" alt="Hybrid 2 small"><figcaption>distant: "a lithograph of a giraffe"</figcaption></figure>
     </div>
 
     <!-- ===================================================== -->
@@ -315,13 +315,13 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
     <h2>Part 1.2: Noising Process</h2>
 
     <div class="row">
-        <figure><img src="images/b12_s000.png" alt="0.0"><figcaption>sigma = 0.0</figcaption></figure>
-        <figure><img src="images/b12_s020.png" alt="0.2"><figcaption>sigma = 0.2</figcaption></figure>
-        <figure><img src="images/b12_s040.png" alt="0.4"><figcaption>sigma = 0.4</figcaption></figure>
-        <figure><img src="images/b12_s050.png" alt="0.5"><figcaption>sigma = 0.5</figcaption></figure>
-        <figure><img src="images/b12_s060.png" alt="0.6"><figcaption>sigma = 0.6</figcaption></figure>
-        <figure><img src="images/b12_s080.png" alt="0.8"><figcaption>sigma = 0.8</figcaption></figure>
-        <figure><img src="images/b12_s100.png" alt="1.0"><figcaption>sigma = 1.0</figcaption></figure>
+        <figure><img src="b12_s000.png" alt="0.0"><figcaption>sigma = 0.0</figcaption></figure>
+        <figure><img src="b12_s020.png" alt="0.2"><figcaption>sigma = 0.2</figcaption></figure>
+        <figure><img src="b12_s040.png" alt="0.4"><figcaption>sigma = 0.4</figcaption></figure>
+        <figure><img src="b12_s050.png" alt="0.5"><figcaption>sigma = 0.5</figcaption></figure>
+        <figure><img src="b12_s060.png" alt="0.6"><figcaption>sigma = 0.6</figcaption></figure>
+        <figure><img src="b12_s080.png" alt="0.8"><figcaption>sigma = 0.8</figcaption></figure>
+        <figure><img src="b12_s100.png" alt="1.0"><figcaption>sigma = 1.0</figcaption></figure>
     </div>
 
     <h2>Part 1.2.1: Training the Denoiser</h2>
@@ -329,13 +329,13 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
     <p>[TODO: training setup: sigma = 0.5, D = 128, batch 256, Adam lr 1e-4, 5 epochs]</p>
 
     <figure style="margin-top: 16px;">
-        <img src="images/denoise_loss.png" alt="Training loss">
+        <img src="denoise_loss.png" alt="Training loss">
         <figcaption>training loss</figcaption>
     </figure>
 
     <div class="row">
-        <figure><img src="images/denoise_1.png" alt="Epoch 1"><figcaption>test results after epoch 1</figcaption></figure>
-        <figure><img src="images/denoise_5.png" alt="Epoch 5"><figcaption>test results after epoch 5</figcaption></figure>
+        <figure><img src="denoise_1.png" alt="Epoch 1"><figcaption>test results after epoch 1</figcaption></figure>
+        <figure><img src="denoise_5.png" alt="Epoch 5"><figcaption>test results after epoch 5</figcaption></figure>
     </div>
 
     <h2>Part 1.2.2: Out-of-Distribution Testing</h2>
@@ -343,25 +343,25 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
     <p>[TODO: how the denoiser handles noise levels it wasn't trained on]</p>
 
     <div class="row">
-        <figure><img src="images/b122_s000.png" alt="0.0"><figcaption>sigma = 0.0</figcaption></figure>
-        <figure><img src="images/b122_s020.png" alt="0.2"><figcaption>sigma = 0.2</figcaption></figure>
-        <figure><img src="images/b122_s040.png" alt="0.4"><figcaption>sigma = 0.4</figcaption></figure>
-        <figure><img src="images/b122_s050.png" alt="0.5"><figcaption>sigma = 0.5</figcaption></figure>
-        <figure><img src="images/b122_s060.png" alt="0.6"><figcaption>sigma = 0.6</figcaption></figure>
-        <figure><img src="images/b122_s080.png" alt="0.8"><figcaption>sigma = 0.8</figcaption></figure>
-        <figure><img src="images/b122_s100.png" alt="1.0"><figcaption>sigma = 1.0</figcaption></figure>
+        <figure><img src="b122_s000.png" alt="0.0"><figcaption>sigma = 0.0</figcaption></figure>
+        <figure><img src="b122_s020.png" alt="0.2"><figcaption>sigma = 0.2</figcaption></figure>
+        <figure><img src="b122_s040.png" alt="0.4"><figcaption>sigma = 0.4</figcaption></figure>
+        <figure><img src="b122_s050.png" alt="0.5"><figcaption>sigma = 0.5</figcaption></figure>
+        <figure><img src="b122_s060.png" alt="0.6"><figcaption>sigma = 0.6</figcaption></figure>
+        <figure><img src="b122_s080.png" alt="0.8"><figcaption>sigma = 0.8</figcaption></figure>
+        <figure><img src="b122_s100.png" alt="1.0"><figcaption>sigma = 1.0</figcaption></figure>
     </div>
 
     <h2>Part 1.2.3: Denoising Pure Noise</h2>
 
     <figure style="margin-top: 16px;">
-        <img src="images/pure_noise_loss.png" alt="Training loss">
+        <img src="pure_noise_loss.png" alt="Training loss">
         <figcaption>training loss (pure noise input)</figcaption>
     </figure>
 
     <div class="row">
-        <figure><img src="images/pure_noise_epoch1.png" alt="Epoch 1"><figcaption>after epoch 1</figcaption></figure>
-        <figure><img src="images/pure_noise_epoch5.png" alt="Epoch 5"><figcaption>after epoch 5</figcaption></figure>
+        <figure><img src="pure_noise_epoch1.png" alt="Epoch 1"><figcaption>after epoch 1</figcaption></figure>
+        <figure><img src="pure_noise_epoch5.png" alt="Epoch 5"><figcaption>after epoch 5</figcaption></figure>
     </div>
 
     <p>[TODO: what pattern you see, how it relates to the training digits, and why (the MSE / centroid idea)]</p>
@@ -375,16 +375,16 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
     <p>[TODO: setup: D = 64, batch 64, Adam lr 1e-2, exponential scheduler, 10 epochs]</p>
 
     <figure style="margin-top: 16px;">
-        <img src="images/time_conditioned_loss.png" alt="Training loss">
+        <img src="time_conditioned_loss.png" alt="Training loss">
         <figcaption>training loss</figcaption>
     </figure>
 
     <h2>Part 2.3: Sampling from the Time-Conditioned UNet</h2>
 
     <div class="row">
-        <figure><img src="images/time_condition_1.png" alt="Epoch 1"><figcaption>epoch 1</figcaption></figure>
-        <figure><img src="images/time_condition_5.png" alt="Epoch 5"><figcaption>epoch 5</figcaption></figure>
-        <figure><img src="images/time_condition_10.png" alt="Epoch 10"><figcaption>epoch 10</figcaption></figure>
+        <figure><img src="time_condition_1.png" alt="Epoch 1"><figcaption>epoch 1</figcaption></figure>
+        <figure><img src="time_condition_5.png" alt="Epoch 5"><figcaption>epoch 5</figcaption></figure>
+        <figure><img src="time_condition_10.png" alt="Epoch 10"><figcaption>epoch 10</figcaption></figure>
     </div>
 
     <p>[TODO: how the samples improve over training]</p>
@@ -396,12 +396,12 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
     <h2>Part 2.5: Training the Class-Conditioned UNet</h2>
 
     <figure style="margin-top: 16px;">
-        <img src="images/class_conditioned_loss.png" alt="Training loss">
+        <img src="class_conditioned_loss.png" alt="Training loss">
         <figcaption>training loss (with scheduler)</figcaption>
     </figure>
 
     <figure style="margin-top: 16px;">
-        <img src="images/class_no_scheduler_loss.png" alt="Training loss, no scheduler">
+        <img src="class_no_scheduler_loss.png" alt="Training loss, no scheduler">
         <figcaption>training loss (no scheduler, constant lr = 5.5e-3)</figcaption>
     </figure>
 
@@ -410,16 +410,16 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
     <p>[TODO: CFG with guidance scale 5, 4 of each digit]</p>
 
     <div class="row">
-        <figure><img src="images/class_condition1.png" alt="Epoch 1"><figcaption>epoch 1</figcaption></figure>
-        <figure><img src="images/class_condition5.png" alt="Epoch 5"><figcaption>epoch 5</figcaption></figure>
-        <figure><img src="images/class_condition10.png" alt="Epoch 10"><figcaption>epoch 10</figcaption></figure>
+        <figure><img src="class_condition1.png" alt="Epoch 1"><figcaption>epoch 1</figcaption></figure>
+        <figure><img src="class_condition5.png" alt="Epoch 5"><figcaption>epoch 5</figcaption></figure>
+        <figure><img src="class_condition10.png" alt="Epoch 10"><figcaption>epoch 10</figcaption></figure>
     </div>
 
     <h3>Without the learning rate scheduler</h3>
     <div class="row">
-        <figure><img src="images/no_schedule_1.png" alt="Epoch 1"><figcaption>epoch 1</figcaption></figure>
-        <figure><img src="images/no_schedule_5.png" alt="Epoch 5"><figcaption>epoch 5</figcaption></figure>
-        <figure><img src="images/no_schedule_10.png" alt="Epoch 10"><figcaption>epoch 10</figcaption></figure>
+        <figure><img src="no_schedule_1.png" alt="Epoch 1"><figcaption>epoch 1</figcaption></figure>
+        <figure><img src="no_schedule_5.png" alt="Epoch 5"><figcaption>epoch 5</figcaption></figure>
+        <figure><img src="no_schedule_10.png" alt="Epoch 10"><figcaption>epoch 10</figcaption></figure>
     </div>
 
     <p>[TODO: what you did to make up for removing the scheduler (constant lr = 5.5e-3) and how the results compare]</p>
