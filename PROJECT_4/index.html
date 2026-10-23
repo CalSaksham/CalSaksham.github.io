@@ -355,11 +355,10 @@ def make_hybrids(noise, condition_a, condition_b, predict_velocity, w=7, step_si
 
     <p>I tested the denoiser on noise levels it had not trained on. It handles values below σ = 0.5 pretty well. At σ = 1.0, I can still read the 7, but it looks blotchy and has specks left over. That makes sense since the model only learned to clean images at σ = 0.5.</p>
 
-    <div class="row">
+    <div class="row" style="flex-wrap: nowrap;">
         <figure><img src="b122_s000.png" alt="0.0"><figcaption>sigma = 0.0</figcaption></figure>
         <figure><img src="b122_s020.png" alt="0.2"><figcaption>sigma = 0.2</figcaption></figure>
         <figure><img src="b122_s040.png" alt="0.4"><figcaption>sigma = 0.4</figcaption></figure>
-        <figure><img src="b122_s050.png" alt="0.5"><figcaption>sigma = 0.5</figcaption></figure>
         <figure><img src="b122_s060.png" alt="0.6"><figcaption>sigma = 0.6</figcaption></figure>
         <figure><img src="b122_s080.png" alt="0.8"><figcaption>sigma = 0.8</figcaption></figure>
         <figure><img src="b122_s100.png" alt="1.0"><figcaption>sigma = 1.0</figcaption></figure>
