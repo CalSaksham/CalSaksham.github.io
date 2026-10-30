@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project 4: Image Warping and Mosaicing</title>
+    <style>
+        body {
+            font-family: -apple-system, Helvetica, Arial, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            line-height: 1.6;
+            color: #222;
+        }
+        h1 {
+            font-size: 30px;
+            margin-bottom: 0;
+        }
+        h2 {
+            font-size: 22px;
+            margin-top: 48px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        h3 {
+            font-size: 18px;
+            margin-top: 32px;
+        }
+        .row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+        figure {
+            margin: 0;
+            flex: 1;
+            min-width: 140px;
+        }
+        figure img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+        figcaption {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 12px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Project 4: Image Warping and Mosaicing</h1>
+    <p>CS180 &middot; Saksham</p>
+
+    <h1 style="margin-top: 48px;">Part A</h1>
+
+    <!-- ===================================================== -->
+    <!-- A.1 -->
+    <!-- ===================================================== -->
+
+    <h2>A.1: Shoot the Pictures</h2>
+
+    <p>[WRITE: where you took the photos, what phone, and how you shot them. e.g. stood in one spot and turned the phone, tried to keep 40–70% overlap.]</p>
+
+    <h3>Set 1: [NAME, e.g. Doe Library]</h3>
+    <div class="row">
+        <figure>
+            <img src="images/IMG_8081.jpg" alt="IMG_8081">
+            <figcaption>IMG_8081</figcaption>
+        </figure>
+        <figure>
+            <img src="images/IMG_8082.jpg" alt="IMG_8082">
+            <figcaption>IMG_8082</figcaption>
+        </figure>
+    </div>
+
+    <h3>Set 2: [NAME]</h3>
+    <div class="row">
+        <figure>
+            <img src="images/IMG_8089.jpg" alt="IMG_8089">
+            <figcaption>IMG_8089</figcaption>
+        </figure>
+        <figure>
+            <img src="images/IMG_8090.jpg" alt="IMG_8090">
+            <figcaption>IMG_8090</figcaption>
+        </figure>
+    </div>
+
+    <h3>Set 3: [NAME]</h3>
+    <div class="row">
+        <figure>
+            <img src="images/IMG_0846.jpg" alt="IMG_0846">
+            <figcaption>IMG_0846</figcaption>
+        </figure>
+        <figure>
+            <img src="images/IMG_0847.jpg" alt="IMG_0847">
+            <figcaption>IMG_0847</figcaption>
+        </figure>
+    </div>
+
+    <h2>A.2: Recover Homographies</h2>
+
+    <p>[WRITE: how you got the points (which tool), how many you clicked, and how you picked them, e.g. sharp corners on the building, spread out.]</p>
+
+    <p>[WRITE: the idea. Each pair of points gives two equations, H has 8 unknowns, so with more than 4 pairs there are more equations than unknowns and I solve it with least squares.]</p>
+
+    <h3>Set 1: IMG_8081 and IMG_8082</h3>
+    <div class="row">
+        <figure>
+            <img src="images/corr_8081.png" alt="Points on IMG_8081">
+            <figcaption>9 clicked points on IMG_8081</figcaption>
+        </figure>
+        <figure>
+            <img src="images/corr_8082.png" alt="Points on IMG_8082">
+            <figcaption>the same points on IMG_8082</figcaption>
+        </figure>
+    </div>
+
+    <p>H has 8 unknowns:</p>
+<pre>
+H = [ a  b  c ]
+    [ d  e  f ]
+    [ g  h  1 ]
+</pre>
+    <p>It sends a point (x, y) to (x', y') like this:</p>
+<pre>
+x' = (ax + by + c) / (gx + hy + 1)
+y' = (dx + ey + f) / (gx + hy + 1)
+</pre>
+    <p>Multiplying both sides by (gx + hy + 1) and moving things around, every pair of points gives two equations:</p>
+<pre>
+ax + by + c - gxx' - hyx' = x'
+dx + ey + f - gxy' - hyy' = y'
+</pre>
+    <p>Stacking these for all 9 pairs gives 18 equations for 8 unknowns, which I solve with least squares. This is the H I got:</p>
+<pre>
+H = [ 1.679    -0.024    -1853.8 ]
+    [ 0.424     1.554    -1488.8 ]
+    [ 0.0002    0.00004      1   ]
+</pre>
+
+    <h3>Set 2: IMG_8089 and IMG_8090</h3>
+    <div class="row">
+        <figure>
+            <img src="images/corr_8089.png" alt="Points on IMG_8089">
+            <figcaption>8 clicked points on IMG_8089</figcaption>
+        </figure>
+        <figure>
+            <img src="images/corr_8090.png" alt="Points on IMG_8090">
+            <figcaption>the same points on IMG_8090</figcaption>
+        </figure>
+    </div>
+
+    <p>Same thing with 8 pairs (16 equations). This is the H I got:</p>
+<pre>
+H = [  0.750     0.024     899.5 ]
+    [ -0.176     0.841     321.6 ]
+    [ -0.00007  -0.00002     1   ]
+</pre>
+
+    <!-- ===================================================== -->
+    <!-- A.3 -->
+    <!-- ===================================================== -->
+
+    <h2>A.3: Warp the Images</h2>
+
+    <p>[WRITE: how inverse warping works in your code. e.g. send the 4 corners through H to get the output size, then for every output pixel go backwards with H inverse and look up the color in the original image. Pixels that land outside the image stay black.]</p>
+
+    <h3>Rectification 1: [NAME, e.g. fire extinguisher cabinet]</h3>
+    <div class="row">
+        <figure>
+            <img src="images/rect1_nn.png" alt="Rectification 1 nearest neighbor">
+            <figcaption>nearest neighbor</figcaption>
+        </figure>
+        <figure>
+            <img src="images/rect1_bilinear.png" alt="Rectification 1 bilinear">
+            <figcaption>bilinear</figcaption>
+        </figure>
+    </div>
+
+    <h3>Rectification 2: [NAME, e.g. Discovery Hub sign]</h3>
+    <div class="row">
+        <figure>
+            <img src="images/rect2_nn.png" alt="Rectification 2 nearest neighbor">
+            <figcaption>nearest neighbor</figcaption>
+        </figure>
+        <figure>
+            <img src="images/rect2_bilinear.png" alt="Rectification 2 bilinear">
+            <figcaption>bilinear</figcaption>
+        </figure>
+    </div>
+
+    <h3>Rectification 3: [NAME, e.g. TV screen]</h3>
+    <div class="row">
+        <figure>
+            <img src="images/rect3_nn.png" alt="Rectification 3 nearest neighbor">
+            <figcaption>nearest neighbor</figcaption>
+        </figure>
+        <figure>
+            <img src="images/rect3_bilinear.png" alt="Rectification 3 bilinear">
+            <figcaption>bilinear</figcaption>
+        </figure>
+    </div>
+
+    <h3>Nearest neighbor vs bilinear</h3>
+    <p>[WRITE: speed vs quality. e.g. nearest neighbor took [TIME] s and bilinear took [TIME] s. Nearest neighbor is faster but edges and text look jagged when you zoom in; bilinear is a bit slower but smoother.]</p>
+
+    <!-- ===================================================== -->
+    <!-- A.4 -->
+    <!-- ===================================================== -->
+
+    <h2>A.4: Blend the Images into a Mosaic</h2>
+
+    <p>[WRITE: your procedure. e.g. kept one image as the reference, warped the other into it with H, figured out the full canvas size from the corners, and put both onto that canvas.]</p>
+
+    <p>[WRITE: how you blended. e.g. each image gets a weight that is 1 in the middle and falls off to 0 at the edges, then every pixel is the weighted average of the images that cover it, so there is no hard seam.]</p>
+
+    <h3>Mosaic 1: [NAME]</h3>
+    <figure style="margin-top: 16px;">
+        <img src="images/mosaic1.png" alt="Mosaic 1 with its source images">
+        <figcaption>IMG_8081, IMG_8082, and the mosaic</figcaption>
+    </figure>
+
+    <h3>Mosaic 2: [NAME]</h3>
+    <figure style="margin-top: 16px;">
+        <img src="images/mosaic2.png" alt="Mosaic 2 with its source images">
+        <figcaption>IMG_8089, IMG_8090, and the mosaic</figcaption>
+    </figure>
+
+    <h3>Mosaic 3: [NAME]</h3>
+    <figure style="margin-top: 16px;">
+        <img src="images/mosaic3.png" alt="Mosaic 3 with its source images">
+        <figcaption>IMG_0846, IMG_0847, and the mosaic</figcaption>
+    </figure>
+
+    <p>[WRITE: what you notice. e.g. where it lines up well, any ghosting on trees or people that moved, any brightness difference between the photos.]</p>
+
+</body>
+</html>
