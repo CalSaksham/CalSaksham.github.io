@@ -68,9 +68,9 @@
 
     <h2>A.1: Shoot the Pictures</h2>
 
-    <p>[WRITE: where you took the photos, what phone, and how you shot them. e.g. stood in one spot and turned the phone, tried to keep 40–70% overlap.]</p>
+    <p>I took these on my iPhone (I think 14 plus). For each pair I stood in one spot and just turned the phone, and tried to keep a lot of overlap between the two shots.</p>
 
-    <h3>Set 1: [NAME, e.g. Doe Library]</h3>
+    <h3>Set 1: Doe Library</h3>
     <div class="row">
         <figure>
             <img src="images/IMG_8081.jpg" alt="IMG_8081">
@@ -82,7 +82,7 @@
         </figure>
     </div>
 
-    <h3>Set 2: [NAME]</h3>
+    <h3>Set 2: Forest Area on-campus Northside</h3>
     <div class="row">
         <figure>
             <img src="images/IMG_8089.jpg" alt="IMG_8089">
@@ -94,7 +94,7 @@
         </figure>
     </div>
 
-    <h3>Set 3: [NAME]</h3>
+    <h3>Set 3: House Rooftop</h3>
     <div class="row">
         <figure>
             <img src="images/IMG_0846.jpg" alt="IMG_0846">
@@ -108,9 +108,9 @@
 
     <h2>A.2: Recover Homographies</h2>
 
-    <p>[WRITE: how you got the points (which tool), how many you clicked, and how you picked them, e.g. sharp corners on the building, spread out.]</p>
+    <p>I clicked the matching points with the correspondence tool and saved them as JSON. I picked corners that are easy to find in both photos, like windows, the roof line and the lamp post, and skipped leaves and clouds. The tool kept my old points from set 1 when I did set 2, so for set 2 I only use the last 8.</p>
 
-    <p>[WRITE: the idea. Each pair of points gives two equations, H has 8 unknowns, so with more than 4 pairs there are more equations than unknowns and I solve it with least squares.]</p>
+    <p>H has 8 unknowns. Each pair of points gives two equations, so 4 pairs is the minimum. I used more than that so a slightly off click doesn’t mess everything up, and solved it with least squares.</p>
 
     <h3>Set 1: IMG_8081 and IMG_8082</h3>
     <div class="row">
@@ -167,9 +167,11 @@ H = [  0.750     0.024     899.5 ]
 </pre>
     <h2>A.3: Warp the Images</h2>
 
-    <p>[WRITE: how inverse warping works in your code. e.g. send the 4 corners through H to get the output size, then for every output pixel go backwards with H inverse and look up the color in the original image. Pixels that land outside the image stay black.]</p>
+    <p>First I push the 4 corners through H to see how big the output needs to be. Then for every output pixel I go backwards with H inverse to find where it came from in the original image, so there are no holes. If it lands outside the image, it stays black. Nearest neighbor just grabs the closest pixel. Bilinear mixes the 4 pixels around that spot.
 
-    <h3>Rectification 1: [NAME, e.g. fire extinguisher cabinet]</h3>
+        For rectification I clicked the 4 corners of something I know is a rectangle and mapped them to a flat rectangle. The object ends up looking like I’m facing it straight on, and the rest of the wall gets stretched out.</p>
+
+    <h3>Rectification 1: Fire Extinguisher Cabinet</h3>
     <div class="row">
         <figure>
             <img src="images/rect1_nn.png" alt="Rectification 1 nearest neighbor">
@@ -181,7 +183,7 @@ H = [  0.750     0.024     899.5 ]
         </figure>
     </div>
 
-    <h3>Rectification 2: [NAME, e.g. Discovery Hub sign]</h3>
+    <h3>Rectification 2: Room Sign</h3>
     <div class="row">
         <figure>
             <img src="images/rect2_nn.png" alt="Rectification 2 nearest neighbor">
@@ -193,7 +195,7 @@ H = [  0.750     0.024     899.5 ]
         </figure>
     </div>
 
-    <h3>Rectification 3: [NAME, e.g. TV screen]</h3>
+    <h3>Rectification 3: TV Screen</h3>
     <div class="row">
         <figure>
             <img src="images/rect3_nn.png" alt="Rectification 3 nearest neighbor">
@@ -206,33 +208,33 @@ H = [  0.750     0.024     899.5 ]
     </div>
 
     <h3>Nearest neighbor vs bilinear</h3>
-    <p>[WRITE: speed vs quality. e.g. nearest neighbor took [TIME] s and bilinear took [TIME] s. Nearest neighbor is faster but edges and text look jagged when you zoom in; bilinear is a bit slower but smoother.]</p>
+    <p>Nearest neighbor took about 7 seconds and bilinear took about 14, so bilinear is around twice as slow since it looks at 4 pixels instead of 1. They look almost the same at normal size. Zoomed in, nearest neighbor gets blocky on edges and text, and bilinear stays smoother. I used bilinear for the mosaics.</p>
 
     <h2>A.4: Blend the Images into a Mosaic</h2>
 
-    <p>[WRITE: your procedure. e.g. kept one image as the reference, warped the other into it with H, figured out the full canvas size from the corners, and put both onto that canvas.]</p>
+    <p>I keep one photo as it is and warp the other one onto it. I use the warped corners to figure out how big the final canvas needs to be, then put both images on it. My code loops over every pixel, so full-size photos took forever. I shrank them by 4 (and the points too) to make it run in about 30 seconds.</p>
 
-    <p>[WRITE: how you blended. e.g. each image gets a weight that is 1 in the middle and falls off to 0 at the edges, then every pixel is the weighted average of the images that cover it, so there is no hard seam.]</p>
+    <p>If one image just sits on top of the other, you see a hard edge. So each image gets a weight that is 1 in the middle and goes down to 0 at the edges, and every pixel is a weighted average of the images that cover it. That way it fades from one photo to the other instead of cutting.</p>
 
-    <h3>Mosaic 1: [NAME]</h3>
+    <h3>Mosaic 1: Doe Library</h3>
     <figure class="wide">
         <img src="images/mosaic1.png" alt="Mosaic 1 with its source images">
         <figcaption>IMG_8081, IMG_8082, and the mosaic</figcaption>
     </figure>
 
-    <h3>Mosaic 2: [NAME]</h3>
+    <h3>Mosaic 2: Forest Area on-campus Northside</h3>
     <figure class="wide">
         <img src="images/mosaic2.png" alt="Mosaic 2 with its source images">
         <figcaption>IMG_8089, IMG_8090, and the mosaic</figcaption>
     </figure>
 
-    <h3>Mosaic 3: [NAME]</h3>
+    <h3>Mosaic 3: House Rooftop</h3>
     <figure class="wide">
         <img src="images/mosaic3.png" alt="Mosaic 3 with its source images">
         <figcaption>IMG_0846, IMG_0847, and the mosaic</figcaption>
     </figure>
 
-    <p>[WRITE: what you notice. e.g. where it lines up well, any ghosting on trees or people that moved, any brightness difference between the photos.]</p>
+    <p>All three line up pretty well. The library one works because all my points were on the building. The trees one was the hardest since the tree and lamp post are close to the camera, so the leaves look a little soft where the photos overlap, and one photo is brighter than the other, but the blending hides it. The rooftop one is the cleanest because everything is far away.</p>
 
 </body>
 </html>
