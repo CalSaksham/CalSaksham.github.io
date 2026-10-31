@@ -141,58 +141,58 @@ def warpImageBilinear(im, H):
 
     return warped
 
-# im = plt.imread("IMG_8089.jpeg")
+im = plt.imread("IMG_8089.jpeg")
 
-# nn = warpImageNearestNeighbor(im, H)
-# bil = warpImageBilinear(im, H)
+nn = warpImageNearestNeighbor(im, H)
+bil = warpImageBilinear(im, H)
 
-# plt.figure()
-# plt.imshow(nn)
-# plt.title("Nearest neighbor")
+plt.figure()
+plt.imshow(nn)
+plt.title("Nearest neighbor")
 
-# plt.figure()
-# plt.imshow(bil)
-# plt.title("Bilinear")
-# plt.show()
+plt.figure()
+plt.imshow(bil)
+plt.title("Bilinear")
+plt.show()
 
-# width = 1920
-# height = 1080
+width = 1920
+height = 1080
 
-# im2_pts = np.array([
-#     [0, 0],
-#     [width - 1, 0],
-#     [width - 1, height - 1],
-#     [0, height - 1]
-# ])
+im2_pts = np.array([
+    [0, 0],
+    [width - 1, 0],
+    [width - 1, height - 1],
+    [0, height - 1]
+])
 
-# for name in ["IMG_8096", "IMG_8097", "IMG_8098"]:
-#     im = plt.imread(name + ".jpeg")
+for name in ["IMG_8096", "IMG_8097", "IMG_8098"]:
+    im = plt.imread(name + ".jpeg")
 
-#     if name == "IMG_8098":
-#         im = np.rot90(im, k=1)
-#     else:
-#         im = np.rot90(im, k=-1)
+    if name == "IMG_8098":
+        im = np.rot90(im, k=1)
+    else:
+        im = np.rot90(im, k=-1)
 
-#     plt.figure()
-#     plt.imshow(im)
-#     plt.title(name + "corners")
-#     im1_pts = np.array(plt.ginput(4, timeout=0))
-#     plt.close()
+    plt.figure()
+    plt.imshow(im)
+    plt.title(name + "corners")
+    im1_pts = np.array(plt.ginput(4, timeout=0))
+    plt.close()
 
-#     H = computeH(im1_pts, im2_pts)
+    H = computeH(im1_pts, im2_pts)
 
-#     nn = warpImageNearestNeighbor(im, H)
-#     bil = warpImageBilinear(im, H)
+    nn = warpImageNearestNeighbor(im, H)
+    bil = warpImageBilinear(im, H)
 
-#     plt.figure()
-#     plt.imshow(nn)
-#     plt.title("Nearest")
+    plt.figure()
+    plt.imshow(nn)
+    plt.title("Nearest")
 
-#     plt.figure()
-#     plt.imshow(bil)
-#     plt.title("Bilinear")
+    plt.figure()
+    plt.imshow(bil)
+    plt.title("Bilinear")
 
-#     plt.show()
+    plt.show()
 
 
 
