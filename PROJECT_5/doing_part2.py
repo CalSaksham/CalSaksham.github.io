@@ -1,7 +1,6 @@
 import json
 import numpy as np
 import matplotlib.pyplot as plt
-from skimage.color import rgb2gray
 from scipy.ndimage import gaussian_filter
 from skimage.feature import corner_harris, peak_local_max
 
@@ -295,8 +294,8 @@ for n, (name1, name2, json_file, start, rotate) in enumerate(sets):
         im1 = np.rot90(im1, k=-1)
         im2 = np.rot90(im2, k=-1)
  
-    gray1 = rgb2gray(im1)
-    gray2 = rgb2gray(im2)
+    gray1 = np.mean(im1, axis=2) / 255
+    gray2 = np.mean(im2, axis=2) / 255  
     h1, coords1 = get_harris_corners(gray1)
     h2, coords2 = get_harris_corners(gray2)
     pts1 = anms(h1, coords1)
