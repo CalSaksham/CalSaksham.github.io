@@ -248,5 +248,102 @@ H = [  0.750     0.024     899.5 ]
 
     <p>All three line up pretty well. The library one works because all my points were on the building. The trees one was the hardest since the tree and lamp post are close to the camera, so the leaves look a little soft where the photos overlap, and one photo is brighter than the other, but the blending hides it. The rooftop one is the cleanest because everything is far away.</p>
 
+    <h1 style="margin-top: 64px;">Part B</h1>
+
+    <p>In Part A I clicked the points by hand. In Part B the computer finds and matches them on its own, following the paper "Multi-Image Matching using Multi-Scale Oriented Patches" by Brown et al. with a few simplifications. I used the same three sets from Part A, shrunk by 4 like before.</p>
+
+    <h2>B.1: Harris Corners and ANMS</h2>
+
+    <p>I used the Harris corner code from the course. It finds way too many corners, around 18,000 to 20,000 per photo, and most of them are bunched up in the grass, leaves and clouds. So I used ANMS to keep 500 that are strong and spread out. For each corner I find the closest corner that is clearly stronger (at least 10% stronger), and that distance is its radius. Then I keep the 500 corners with the biggest radius.</p>
+
+    <h3>Set 1: Doe Library</h3>
+    <figure style="margin-top: 16px;">
+        <img src="images/partb/corners1.png" alt="Harris corners and ANMS corners on IMG_8081">
+        <figcaption>all Harris corners (left) and the 500 kept by ANMS (right) on IMG_8081</figcaption>
+    </figure>
+
+    <h3>Set 2: Forest Area on-campus Northside</h3>
+    <figure style="margin-top: 16px;">
+        <img src="images/partb/corners2.png" alt="Harris corners and ANMS corners on IMG_8089">
+        <figcaption>all Harris corners (left) and the 500 kept by ANMS (right) on IMG_8089</figcaption>
+    </figure>
+
+    <h3>Set 3: House Rooftop</h3>
+    <figure style="margin-top: 16px;">
+        <img src="images/partb/corners3.png" alt="Harris corners and ANMS corners on IMG_0846">
+        <figcaption>all Harris corners (left) and the 500 kept by ANMS (right) on IMG_0846</figcaption>
+    </figure>
+
+    <h2>B.2: Feature Descriptors</h2>
+
+    <p>For each corner I blur the image a bit, take the 40x40 window around it, and keep every 5th pixel to get an 8x8 patch. Then I subtract the mean and divide by the standard deviation, so the same spot still matches even if one photo is brighter than the other.</p>
+
+    <h3>Set 1: Doe Library</h3>
+    <figure style="margin-top: 16px;">
+        <img src="images/partb/descriptors1.png" alt="8x8 descriptors from IMG_8081">
+        <figcaption>a few 8x8 descriptors from IMG_8081</figcaption>
+    </figure>
+
+    <h3>Set 2: Forest Area on-campus Northside</h3>
+    <figure style="margin-top: 16px;">
+        <img src="images/partb/descriptors2.png" alt="8x8 descriptors from IMG_8089">
+        <figcaption>a few 8x8 descriptors from IMG_8089</figcaption>
+    </figure>
+
+    <h3>Set 3: House Rooftop</h3>
+    <figure style="margin-top: 16px;">
+        <img src="images/partb/descriptors3.png" alt="8x8 descriptors from IMG_0846">
+        <figcaption>a few 8x8 descriptors from IMG_0846</figcaption>
+    </figure>
+
+    <h2>B.3: Feature Matching</h2>
+
+    <p>For each patch in the first photo I find the closest and second closest patch in the second photo. If the closest one is a lot closer than the second, it's probably a real match. If they're about the same, the patch is too generic (like a piece of grass) and I throw it out. I keep a match when closest / second closest is less than 0.7. Like Figure 6b in the paper, on my photos the good matches usually have a ratio around 0.6 and the bad ones around 0.95, so 0.7 keeps most of the good ones.</p>
+
+    <h3>Set 1: Doe Library</h3>
+    <figure class="wide">
+        <img src="images/partb/matches1.png" alt="Matches between IMG_8081 and IMG_8082">
+    </figure>
+
+    <h3>Set 2: Forest Area on-campus Northside</h3>
+    <figure class="wide">
+        <img src="images/partb/matches2.png" alt="Matches between IMG_8089 and IMG_8090">
+    </figure>
+
+    <h3>Set 3: House Rooftop</h3>
+    <figure class="wide">
+        <img src="images/partb/matches3.png" alt="Matches between IMG_0846 and IMG_0847">
+    </figure>
+
+    <h2>B.4: RANSAC and Automatic Mosaics</h2>
+
+    <p>Some matches are still wrong, and even one bad match can mess up least squares. So I use RANSAC: pick 4 random matches, compute H from just those, and count how many of all the matches land within 3 pixels of where H says. I do this 500 times and keep the biggest group, then compute the final H from that whole group with least squares. The mosaics use the same code as Part A.</p>
+
+    <h3>Mosaic 1: Doe Library</h3>
+    <figure class="wide">
+        <img src="images/partb/inliers1.png" alt="RANSAC inliers between IMG_8081 and IMG_8082">
+    </figure>
+    <figure class="wide">
+        <img src="images/partb/mosaic1.png" alt="Manual and automatic mosaic of Doe Library">
+    </figure>
+
+    <h3>Mosaic 2: Forest Area on-campus Northside</h3>
+    <figure class="wide">
+        <img src="images/partb/inliers2.png" alt="RANSAC inliers between IMG_8089 and IMG_8090">
+    </figure>
+    <figure class="wide">
+        <img src="images/partb/mosaic2.png" alt="Manual and automatic mosaic of Forest Area on-campus Northside">
+    </figure>
+
+    <h3>Mosaic 3: House Rooftop</h3>
+    <figure class="wide">
+        <img src="images/partb/inliers3.png" alt="RANSAC inliers between IMG_0846 and IMG_0847">
+    </figure>
+    <figure class="wide">
+        <img src="images/partb/mosaic3.png" alt="Manual and automatic mosaic of House Rooftop">
+    </figure>
+
+    <p>The automatic mosaics come out basically the same as my manual ones. The automatic ones use a lot more points spread over the whole overlap, while my clicks were bunched up in a few spots. The forest one has the fewest good matches since the leaves all look alike and the close trees shift a little between shots, but RANSAC still found enough to line it up.</p>
+
 </body>
 </html>
